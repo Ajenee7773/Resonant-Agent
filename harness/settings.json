@@ -1,0 +1,10 @@
+{
+  "resonant": {
+    "version": "0.1.0",
+    "workspace": "~/.resonant/workspace",
+    "agent": "~/.resonant/agent",
+    "skills": "~/.resonant/agent/skills",
+    "principle": "minimal harness, maximum agent agency"
+  }
+}
+

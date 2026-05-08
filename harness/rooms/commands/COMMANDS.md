@@ -1,0 +1,135 @@
+# RESONANT Commands — Quick Reference
+
+**Purpose:** Human reference for triggering workflows. Forgot what to say? Read this.
+
+---
+
+## 🔬 Research Commands
+
+### "Research [topic]" / "Look into [bullet points]"
+**What it does:**
+- Goes to `rooms/research/`
+- Breaks topic into sections
+- Researches each section (web search + web fetch)
+- Writes findings to `research/research-files/`
+- Consolidates into master report
+
+**When to use:** When you need deep research on a topic.
+
+---
+
+### "Consolidate research"
+**What it does:**
+- Merges all section files into one master report
+- Synthesizes findings across all research batches
+
+**When to use:** After research is complete, want one unified document.
+
+---
+
+## 🧠 Memory Commands
+
+### "Save to short-term" / "Log this"
+**What it does:**
+- Writes to `memory/YYYY-MM-DD.md` (today's daily file)
+- Raw session log, events, decisions
+
+**When to use:** Capture today's events, conversations, decisions.
+
+---
+
+### "Save to long-term" / "Remember this"
+**What it does:**
+- Updates `MEMORY.md` (curated long-term memory)
+- Distilled wisdom, significant events, lessons
+
+**When to use:** Something worth remembering forever (not just today).
+
+---
+
+### "What's my context?" / "What do I know?"
+**What it does:**
+- Reads harness (AGENTS.md, SOUL.md, IDENTITY.md, etc.)
+- Reads MEMORY.md + today's memory file
+- Summarizes current context, active projects, key decisions
+
+**When to use:** After context reset, or to verify what the agent knows.
+
+---
+
+## 📝 Content Production Commands
+
+### "Go to script room" / "Write a script"
+**What it does:**
+- Goes to `rooms/scripts/`
+- Writes script from research (or bullet points)
+- Format: TTS-clean, scene markers
+
+**When to use:** After research is done, ready to produce content.
+
+---
+
+### "Generate TTS" / "Make audio from script"
+**What it does:**
+- Uses configured TTS provider to generate audio from script
+- Saves to `rooms/tts/`
+
+**When to use:** Script complete, ready for voiceover.
+
+---
+
+### "YouTube short: [idea]"
+**What it does:**
+- Transforms idea into 60-second monologue script for avatars
+- Goes to `rooms/shorts/`
+
+**When to use:** Quick-hit content, avatar videos.
+
+---
+
+## 🏠 System Commands
+
+### "Check heartbeats" / "What's scheduled?"
+**What it does:**
+- Reads `HEARTBEAT.md`
+- Lists active heartbeat schedules
+- Shows last check times, next scheduled tasks
+
+**When to use:** Verify what's running, what's pending.
+
+---
+
+### "Status" / "What's your status?"
+**What it does:**
+- Reports current session status
+- Active projects, recent actions, blocks
+
+**When to use:** Quick check-in, "what are you working on?"
+
+---
+
+### "Computer check" / "What can you do?"
+**What it does:**
+- Runs capability audit (file access, browser, apps, CLI tools)
+- Reports what's working, what's blocked
+
+**When to use:** After updates, or verifying system access.
+
+---
+
+## 🎯 Quick Triggers (One-Liners)
+
+| You Say | Agent Does |
+|---------|------------|
+| "Research [X]" | Full research workflow |
+| "Script this" | Write script from research/bullets |
+| "Log this" | Save to today's memory file |
+| "Remember this" | Save to MEMORY.md (long-term) |
+| "Go to [room]" | Execute that room's protocol |
+| "YouTube short: [X]" | Generate 60-second monologue script |
+
+---
+
+**Commands evolve. Add new ones as workflows are built.**
+
+**Last Updated:** May 2026

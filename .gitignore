@@ -1,0 +1,19 @@
+# Local install/test output
+.pi-test/
+tmp/
+logs/
+
+# Secrets
+auth.json
+*.env
+*.key
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Node
+node_modules/
+npm-debug.log*
+
