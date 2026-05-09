@@ -29,30 +29,73 @@ The installer never imports from an existing personal Pi, OpenClaw, Hermes, or a
 - macOS, Linux, or Windows
 - Optional: Ollama for local models
 
-## Install
+## Install From GitHub
 
-Linux/macOS:
+While the repo is private, install with `git clone`. After the repo is public, use the one-line commands below.
+
+### macOS
 
 ```bash
+cd ~
+git clone git@github.com:Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+chmod +x install.sh configure.sh start.sh ui.sh telegram-setup.sh telegram-start.sh
 ./install.sh
 ./configure.sh
+./start.sh
 ```
 
-Windows:
+If SSH is not set up on the Mac, use HTTPS:
 
-```bat
-install.bat
-configure.bat
+```bash
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
 ```
 
-PowerShell:
+### Linux
+
+```bash
+cd ~
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+chmod +x install.sh configure.sh start.sh ui.sh telegram-setup.sh telegram-start.sh
+./install.sh
+./configure.sh
+./start.sh
+```
+
+### Windows PowerShell
 
 ```powershell
+cd $env:USERPROFILE
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
 .\install.ps1
 .\configure.ps1
+.\start.ps1
 ```
 
-GitHub one-liners once the repo is public:
+If using SSH:
+
+```powershell
+git clone git@github.com:Ajenee7773/Resonant-Agent.git
+```
+
+### Windows Command Prompt
+
+```bat
+cd %USERPROFILE%
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+install.bat
+configure.bat
+start.bat
+```
+
+PowerShell is recommended on Windows, but batch files are included.
+
+### Public One-Line Install
+
+Use these after the repo is public.
 
 Linux/macOS:
 
@@ -66,14 +109,14 @@ Windows PowerShell:
 irm https://raw.githubusercontent.com/Ajenee7773/Resonant-Agent/main/install.ps1 | iex
 ```
 
-The one-liners install a persistent copy of the RESONANT Agent launchers into:
+The installers create a persistent copy of the RESONANT Agent launchers in:
 
 ```text
 ~/.resonant/app/
 ~/.resonant/bin/
 ```
 
-One door start:
+## Start After Install
 
 Linux/macOS:
 
@@ -98,6 +141,24 @@ PowerShell:
 .\start.ps1
 & "$env:USERPROFILE\.resonant\app\start.ps1"
 & "$env:USERPROFILE\.resonant\bin\resonant.ps1"
+```
+
+## Updating
+
+macOS/Linux:
+
+```bash
+cd ~/Resonant-Agent
+git pull
+./install.sh
+```
+
+Windows PowerShell:
+
+```powershell
+cd "$env:USERPROFILE\Resonant-Agent"
+git pull
+.\install.ps1
 ```
 
 The installer:
