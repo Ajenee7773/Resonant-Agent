@@ -52,18 +52,18 @@ PowerShell:
 .\configure.ps1
 ```
 
-Future GitHub one-liners, after replacing `Ajenee7773/resonant-agent` in the scripts with the final repo:
+GitHub one-liners once the repo is public:
 
 Linux/macOS:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Ajenee7773/resonant-agent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Ajenee7773/Resonant-Agent/main/install.sh | bash
 ```
 
 Windows PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/Ajenee7773/resonant-agent/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Ajenee7773/Resonant-Agent/main/install.ps1 | iex
 ```
 
 The one-liners install a persistent copy of the RESONANT Agent launchers into:
@@ -143,6 +143,42 @@ The UI binds to:
 
 It shows a simple chat log and input box, then talks to RESONANT Agent through the Pi runtime RPC bridge.
 
+The UI also includes optional browser voice controls:
+
+- **Mic** fills the input box when browser speech recognition is available.
+- **Voice** reads assistant replies aloud using the browser's speech synthesis.
+
+## Voice
+
+RESONANT Agent includes a lightweight native voice skill. It is off by default and activates when the operator asks for voice.
+
+Text-to-speech uses the computer's built-in speech tools:
+
+- macOS: `say`
+- Windows: SAPI built-in voices
+- Linux: `spd-say` or `espeak`
+
+Run it directly after install:
+
+macOS/Linux:
+
+```bash
+~/.resonant/agent/skills/voice/scripts/speak.sh "RESONANT Agent voice online."
+```
+
+Windows PowerShell:
+
+```powershell
+& "$env:USERPROFILE\.resonant\agent\skills\voice\scripts\speak.ps1" "RESONANT Agent voice online."
+```
+
+Speech-to-text starts with the lowest-friction option: built-in OS dictation.
+
+- macOS: Dictation
+- Windows: `Win + H`
+
+Operators can also speak into ChatGPT, Grok, Gemini, or another voice interface and paste the transcript into RESONANT. Whisper-based local transcription can be added later as an optional power-user path.
+
 ## Telegram
 
 Telegram support is built in but dormant until the operator connects a bot token.
@@ -206,7 +242,7 @@ harness/
     research/            ← Research protocol + internet room
     scripts/             ← Script writing craft + workflows
     shorts/              ← YouTube Shorts protocol
-    tts/                 ← Text-to-speech protocol
+    tts/                 ← Text-to-speech and voice protocol
     world-story/         ← Pattern library, 8-source verification
   extensions/            ← Runtime TypeScript extensions (drop-in)
   os-skill/              ← OS environment skill

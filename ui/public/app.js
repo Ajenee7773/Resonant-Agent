@@ -4,9 +4,15 @@ const input = document.querySelector("#input");
 const sendButton = document.querySelector("#send");
 const statusEl = document.querySelector("#status");
 const newChatButton = document.querySelector("#newChat");
+const voiceInputButton = document.querySelector("#voiceInput");
+const speakToggleButton = document.querySelector("#speakToggle");
 
 const storageKey = "resonant.chat.messages";
+const speakStorageKey = "resonant.voice.speakReplies";
 let messages = [];
+let speakReplies = localStorage.getItem(speakStorageKey) === "1";
+let recognition = null;
+let recognizing = false;
 
 function loadMessages() {
   try {
@@ -41,6 +47,52 @@ function render() {
     messagesEl.appendChild(node);
   }
   messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function updateSpeakToggle() {
+  speakToggleButton.classList.toggle("active", speakReplies);
+  speakToggleButton.setAttribute("aria-pressed", speakReplies ? "true" : "false");
+}
+
+function speakText(text) {
+  if (!speakReplies || !("speechSynthesis" in window)) return;
+  const clean = String(text || "").trim();
+  if (!clean) return;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(new SpeechSynthesisUtterance(clean));
+}
+
+function setupSpeechRecognition() {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) {
+    voiceInputButton.disabled = true;
+    voiceInputButton.title = "Voice input unavailable";
+    return;
+  }
+
+  recognition = new Recognition();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = navigator.language || "en-US";
+
+  recognition.addEventListener("start", () => {
+    recognizing = true;
+    voiceInputButton.classList.add("active");
+  });
+
+  recognition.addEventListener("end", () => {
+    recognizing = false;
+    voiceInputButton.classList.remove("active");
+  });
+
+  recognition.addEventListener("result", (event) => {
+    let transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; i += 1) {
+      transcript += event.results[i][0].transcript;
+    }
+    input.value = transcript.trim();
+    autosize();
+  });
 }
 
 function autosize() {
@@ -105,6 +157,7 @@ async function sendMessage(text) {
         }
       }
     }
+    speakText(assistant.text);
   } catch (error) {
     assistant.text += `\n[Error] ${error.message}`;
     saveMessages();
@@ -140,6 +193,28 @@ newChatButton.addEventListener("click", () => {
   render();
 });
 
+speakToggleButton.addEventListener("click", () => {
+  speakReplies = !speakReplies;
+  localStorage.setItem(speakStorageKey, speakReplies ? "1" : "0");
+  if (!speakReplies && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  updateSpeakToggle();
+});
+
+voiceInputButton.addEventListener("click", () => {
+  if (!recognition) return;
+  if (recognizing) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+});
+
+if (!("speechSynthesis" in window)) {
+  speakToggleButton.disabled = true;
+  speakToggleButton.title = "Read aloud unavailable";
+}
+
+setupSpeechRecognition();
+updateSpeakToggle();
 loadMessages();
 refreshStatus();
-

@@ -4,7 +4,7 @@ set -euo pipefail
 PI_PACKAGE="@mariozechner/pi-coding-agent@0.69.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HARNESS_DIR="$SCRIPT_DIR/harness"
-RESONANT_REPO="${RESONANT_REPO:-Ajenee7773/resonant-agent}"
+RESONANT_REPO="${RESONANT_REPO:-Ajenee7773/Resonant-Agent}"
 RESONANT_REF="${RESONANT_REF:-main}"
 RESONANT_ZIP_URL="${RESONANT_ZIP_URL:-}"
 
@@ -131,10 +131,12 @@ copy_dir_contents "$HARNESS_DIR/memory" "$PI_AGENT_DIR/memory"
 copy_dir_contents "$HARNESS_DIR/persona" "$PI_WORKSPACE_DIR/persona"
 copy_dir_contents "$HARNESS_DIR/rooms" "$PI_WORKSPACE_DIR/rooms"
 copy_dir_contents "$HARNESS_DIR/skills" "$AGENTS_SKILLS_DIR"
+find "$AGENTS_SKILLS_DIR" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 
 if [ -d "$HARNESS_DIR/os-skill" ]; then
   mkdir -p "$AGENTS_SKILLS_DIR/resonant-os"
   cp -R "$HARNESS_DIR/os-skill"/. "$AGENTS_SKILLS_DIR/resonant-os"/
+  find "$AGENTS_SKILLS_DIR/resonant-os" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 fi
 
 log "Copying RESONANT Agent launchers..."

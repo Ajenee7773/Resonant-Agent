@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not $Repo) {
-  $Repo = "Ajenee7773/resonant-agent"
+  $Repo = "Ajenee7773/Resonant-Agent"
 }
 
 $PiPackage = "@mariozechner/pi-coding-agent@0.69.0"

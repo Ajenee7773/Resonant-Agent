@@ -8,7 +8,7 @@
     "ui": "node ui/server.js",
     "telegram:setup": "node telegram/setup.js",
     "telegram:start": "node telegram/bridge.js",
-    "check": "node --check bridge/pi-rpc.js && node --check ui/server.js && node --check telegram/setup.js && node --check telegram/bridge.js && node --check scripts/write-config.js && node --check scripts/auth-env.js"
+    "check": "node --check bridge/pi-rpc.js && node --check ui/server.js && node --check telegram/setup.js && node --check telegram/bridge.js && node --check scripts/write-config.js && node --check scripts/auth-env.js && node --check harness/skills/voice/scripts/speak.js"
   },
   "engines": {
     "node": ">=18"

@@ -4,7 +4,7 @@ Use this before pushing a public release.
 
 ## Required
 
-- Replace `Ajenee7773/resonant-agent` in installer docs/scripts with the final GitHub repo.
+- Replace `Ajenee7773/Resonant-Agent` in installer docs/scripts with the final GitHub repo if the repo moves.
 - Confirm the MIT copyright holder line is correct.
 - Run a clean install in a disposable user/home directory.
 - Verify `install.sh`, `install.ps1`, `start.sh`, `start.ps1`, and `start.bat`.
@@ -16,6 +16,9 @@ Use this before pushing a public release.
 - Verify Ollama path with a local model.
 - Verify one cloud provider path with an API key.
 - Verify local UI binds only to `127.0.0.1`.
+- Verify the local UI starts and shows Mic/Voice controls without breaking chat.
+- Verify the native voice skill installs to `~/.resonant/agent/skills/voice/`.
+- Verify text-to-speech on at least one macOS machine and one Windows machine.
 - Verify Telegram setup with a throwaway bot token.
 - Verify Telegram bridge can be stopped with Ctrl+C.
 

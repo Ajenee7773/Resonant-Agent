@@ -82,6 +82,21 @@ button:hover {
   border-color: #b8b8ae;
 }
 
+button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.icon-button {
+  min-width: 58px;
+  padding: 0 10px;
+}
+
 #send {
   background: var(--accent);
   border-color: var(--accent);
@@ -153,7 +168,7 @@ button:hover {
   border-top: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.92);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 10px;
   padding: 16px max(28px, 8vw);
 }
@@ -189,6 +204,10 @@ textarea:focus {
 
   .composer {
     padding: 12px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  #speakToggle {
+    display: none;
   }
 }
-
