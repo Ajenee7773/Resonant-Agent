@@ -116,6 +116,22 @@ Connect Telegram now? [y/N]
 
 Choose `N` if you want to skip Telegram for now. You can add it later.
 
+If you choose `y`, you need a Telegram bot token first:
+
+1. Open Telegram.
+2. Search for `@BotFather` and make sure it is the official verified BotFather account.
+3. Send `/newbot`.
+4. Give the bot a display name, such as `My Resonant Agent`.
+5. Give the bot a username. Telegram requires bot usernames to end in `bot`, such as `my_resonant_agent_bot`.
+6. BotFather gives you a token. Treat it like a password.
+7. Paste that token when RESONANT asks:
+
+```text
+Telegram bot token:
+```
+
+After that, RESONANT tells you to send `/start` to your new bot. This pairs your Telegram chat with your local RESONANT Agent.
+
 ## Launch RESONANT
 
 Terminal mode:
@@ -431,6 +447,18 @@ Operators can also speak into ChatGPT, Grok, Gemini, or another voice interface 
 ## Telegram
 
 Telegram support is built in but dormant until the operator connects a bot token.
+
+To get a bot token:
+
+1. Open Telegram.
+2. Search for `@BotFather`.
+3. Start a chat with the official verified BotFather account.
+4. Send `/newbot`.
+5. Choose a display name.
+6. Choose a username ending in `bot`, for example `my_resonant_agent_bot`.
+7. Copy the token BotFather gives you.
+
+Keep the token private. Anyone with the token can control that Telegram bot.
 
 Setup:
 
