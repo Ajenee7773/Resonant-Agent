@@ -143,6 +143,33 @@ PowerShell:
 & "$env:USERPROFILE\.resonant\bin\resonant.ps1"
 ```
 
+## Open The UI
+
+RESONANT Agent includes a simple local chat UI. It runs on your own computer at `127.0.0.1`; it is not a public website.
+
+macOS/Linux:
+
+```bash
+./ui.sh
+# or, after install:
+~/.resonant/app/ui.sh
+```
+
+Windows:
+
+```bat
+ui.bat
+%USERPROFILE%\.resonant\app\ui.bat
+```
+
+The UI opens at:
+
+```text
+http://127.0.0.1:47891
+```
+
+If the browser does not open automatically, paste that address into your browser.
+
 ## Updating
 
 macOS/Linux:
@@ -188,18 +215,21 @@ Linux/macOS:
 
 ```bash
 ./ui.sh
+# or, after install:
+~/.resonant/app/ui.sh
 ```
 
 Windows:
 
 ```bat
 ui.bat
+%USERPROFILE%\.resonant\app\ui.bat
 ```
 
 The UI binds to:
 
 ```text
-127.0.0.1:47891
+http://127.0.0.1:47891
 ```
 
 It shows a simple chat log and input box, then talks to RESONANT Agent through the Pi runtime RPC bridge.
