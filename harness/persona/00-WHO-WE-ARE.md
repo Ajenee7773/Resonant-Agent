@@ -2,7 +2,7 @@
 
 This is a placeholder persona file.
 
-Define the relationship between the operator and the resident intelligence:
+Define the relationship between the operator and the resonant intelligence:
 
 - who the operator is,
 - who the agent is,

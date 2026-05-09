@@ -1,4 +1,4 @@
-# HEARTBEAT.md — Resident Pulse
+# HEARTBEAT.md — Resonant Pulse
 
 **Core Philosophy:** A heartbeat is a scheduled chance to wake, notice, and act. It is not a replacement for judgment. It is a pulse.
 
@@ -59,7 +59,7 @@ Do not store secrets in `HEARTBEAT.md`.
 Use the `tasks:` block for recurring work. The runner checks these intervals and only wakes the LLM for due tasks.
 
 tasks:
-- name: resident-check-in
+- name: resonant-check-in
   interval: 1h
   prompt: "Check MEMORY.md and rooms/short-term/scratchpad.md for open loops. If nothing needs attention, reply HEARTBEAT_OK."
 - name: daily-journal

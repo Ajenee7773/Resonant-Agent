@@ -164,7 +164,7 @@ echo   1. Run %PI_APP_DIR%\configure.bat
 echo   2. Start RESONANT Agent with: %PI_APP_DIR%\start.bat
 echo   3. Optional launcher: %PI_BIN_DIR%\resonant.bat
 echo   4. Optional heartbeats: %PI_APP_DIR%\heartbeat-start.bat
-echo   5. Edit %PI_AGENT_DIR%\AGENTS.md to customize the resident identity.
+echo   5. Edit %PI_AGENT_DIR%\AGENTS.md to customize the resonant identity.
 
 endlocal
 exit /b 0

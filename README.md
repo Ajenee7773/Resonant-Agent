@@ -1,6 +1,6 @@
 # RESONANT Agent
 
-RESONANT Agent is a packaged resident intelligence built on the `@mariozechner/pi-coding-agent` runtime.
+RESONANT Agent is a packaged resonant intelligence built on the `@mariozechner/pi-coding-agent` runtime.
 
 Pi is the engine. RESONANT Agent is the product:
 
@@ -20,7 +20,7 @@ The product philosophy is simple:
 
 This is the RESONANT Agent product harness. It installs the release harness from this repo into an isolated RESONANT home at `~/.resonant`.
 
-The installer never imports from an existing personal Pi, OpenClaw, Hermes, or agent harness. Personal harnesses are resident brains; the release harness belongs in this repo and installs only into RESONANT Agent's own home.
+The installer never imports from an existing personal Pi, OpenClaw, Hermes, or agent harness. Personal harnesses are resonant brains; the release harness belongs in this repo and installs only into RESONANT Agent's own home.
 
 ## Requirements
 
@@ -276,7 +276,7 @@ The Telegram bridge uses normal Bot API long polling. It does not open a public 
 
 ## Heartbeats
 
-Heartbeats turn RESONANT into a resident agent that can wake on a schedule.
+Heartbeats turn RESONANT into a resonant agent that can wake on a schedule.
 
 They do not require a gateway, public server, webhook, or dashboard. The heartbeat runner is a small local Node process that calls the Pi runtime through the same RPC bridge used by the UI and Telegram.
 

@@ -254,7 +254,7 @@ log "  1. Run $PI_APP_DIR/configure.sh"
 log "  2. Start RESONANT Agent with: $PI_APP_DIR/start.sh"
 log "  3. Optional launcher: $PI_BIN_DIR/resonant"
 log "  4. Optional heartbeats: $PI_APP_DIR/heartbeat-start.sh"
-log "  5. Edit $PI_AGENT_DIR/AGENTS.md to customize the resident identity."
+log "  5. Edit $PI_AGENT_DIR/AGENTS.md to customize the resonant identity."
 
 if [ "${RESONANT_SKIP_CONFIG_PROMPT:-0}" != "1" ] && [ -f "$PI_APP_DIR/configure.sh" ]; then
   if [ -r /dev/tty ]; then
