@@ -120,6 +120,15 @@ if [ -f "$HARNESS_DIR/settings.json" ]; then
   fi
 fi
 
+if [ -f "$HARNESS_DIR/heartbeat.json" ]; then
+  if [ ! -f "$PI_AGENT_DIR/heartbeat.json" ]; then
+    cp "$HARNESS_DIR/heartbeat.json" "$PI_AGENT_DIR/heartbeat.json"
+    chmod 600 "$PI_AGENT_DIR/heartbeat.json" 2>/dev/null || true
+  else
+    log "heartbeat.json already exists; leaving it untouched."
+  fi
+fi
+
 if [ ! -f "$PI_AGENT_DIR/auth.json" ]; then
   printf '{}\n' > "$PI_AGENT_DIR/auth.json"
   chmod 600 "$PI_AGENT_DIR/auth.json" 2>/dev/null || true
@@ -143,9 +152,10 @@ log "Copying RESONANT Agent launchers..."
 copy_dir_contents "$SCRIPT_DIR/bridge" "$PI_APP_DIR/bridge"
 copy_dir_contents "$SCRIPT_DIR/scripts" "$PI_APP_DIR/scripts"
 copy_dir_contents "$SCRIPT_DIR/ui" "$PI_APP_DIR/ui"
+copy_dir_contents "$SCRIPT_DIR/heartbeat" "$PI_APP_DIR/heartbeat"
 copy_dir_contents "$SCRIPT_DIR/telegram" "$PI_APP_DIR/telegram"
 
-for f in install.sh configure.sh start.sh ui.sh telegram-setup.sh telegram-start.sh package.json README.md RELEASE.md; do
+for f in install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh package.json README.md RELEASE.md; do
   if [ -f "$SCRIPT_DIR/$f" ]; then
     cp "$SCRIPT_DIR/$f" "$PI_APP_DIR/$f"
   fi
@@ -160,6 +170,15 @@ export PI_CODING_AGENT_DIR="$PI_AGENT_DIR"
 exec "$PI_APP_DIR/start.sh" "\$@"
 EOF
 chmod +x "$PI_BIN_DIR/resonant"
+
+cat > "$PI_BIN_DIR/resonant-heartbeat" <<EOF
+#!/usr/bin/env bash
+export RESONANT_HOME="$PI_HOME"
+export PI_HOME="$PI_HOME"
+export PI_CODING_AGENT_DIR="$PI_AGENT_DIR"
+exec "$PI_APP_DIR/heartbeat-start.sh" "\$@"
+EOF
+chmod +x "$PI_BIN_DIR/resonant-heartbeat"
 
 log "Checking pi command..."
 if command -v pi >/dev/null 2>&1; then
@@ -210,6 +229,7 @@ run_health_check() {
   check_file "~/.resonant/agent/CONSTITUTION.md" "$PI_AGENT_DIR/CONSTITUTION.md"
   check_file "~/.resonant/agent/FOUNDATION.md" "$PI_AGENT_DIR/FOUNDATION.md"
   check_file "~/.resonant/agent/HEARTBEAT.md" "$PI_AGENT_DIR/HEARTBEAT.md"
+  check_file "~/.resonant/agent/heartbeat.json" "$PI_AGENT_DIR/heartbeat.json"
   check_file "~/.resonant/agent/MEMORY.md" "$PI_AGENT_DIR/MEMORY.md"
   check_file "~/.resonant/agent/TOOLS.md" "$PI_AGENT_DIR/TOOLS.md"
   check_file "~/.resonant/agent/ROOMS.md" "$PI_AGENT_DIR/ROOMS.md"
@@ -233,7 +253,8 @@ log "Next steps:"
 log "  1. Run $PI_APP_DIR/configure.sh"
 log "  2. Start RESONANT Agent with: $PI_APP_DIR/start.sh"
 log "  3. Optional launcher: $PI_BIN_DIR/resonant"
-log "  4. Edit $PI_AGENT_DIR/AGENTS.md to customize the resident identity."
+log "  4. Optional heartbeats: $PI_APP_DIR/heartbeat-start.sh"
+log "  5. Edit $PI_AGENT_DIR/AGENTS.md to customize the resident identity."
 
 if [ "${RESONANT_SKIP_CONFIG_PROMPT:-0}" != "1" ] && [ -f "$PI_APP_DIR/configure.sh" ]; then
   if [ -r /dev/tty ]; then

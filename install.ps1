@@ -154,6 +154,10 @@ if ((Test-Path -LiteralPath "$HarnessDir\settings.json") -and -not (Test-Path -L
   Copy-Item -LiteralPath "$HarnessDir\settings.json" -Destination "$PiAgentDir\settings.json" -Force
 }
 
+if ((Test-Path -LiteralPath "$HarnessDir\heartbeat.json") -and -not (Test-Path -LiteralPath "$PiAgentDir\heartbeat.json")) {
+  Copy-Item -LiteralPath "$HarnessDir\heartbeat.json" -Destination "$PiAgentDir\heartbeat.json" -Force
+}
+
 if (-not (Test-Path -LiteralPath "$PiAgentDir\auth.json")) {
   "{}" | Set-Content -Path "$PiAgentDir\auth.json" -Encoding UTF8
 }
@@ -173,9 +177,10 @@ Write-Step "Copying RESONANT Agent launchers..."
 Copy-DirContents "$ScriptDir\bridge" "$PiAppDir\bridge"
 Copy-DirContents "$ScriptDir\scripts" "$PiAppDir\scripts"
 Copy-DirContents "$ScriptDir\ui" "$PiAppDir\ui"
+Copy-DirContents "$ScriptDir\heartbeat" "$PiAppDir\heartbeat"
 Copy-DirContents "$ScriptDir\telegram" "$PiAppDir\telegram"
 
-foreach ($file in @("install.bat","install.ps1","configure.bat","configure.ps1","start.bat","start.ps1","ui.bat","telegram-setup.bat","telegram-start.bat","package.json","README.md","RELEASE.md")) {
+foreach ($file in @("install.bat","install.ps1","configure.bat","configure.ps1","start.bat","start.ps1","ui.bat","heartbeat-start.bat","heartbeat-start.ps1","telegram-setup.bat","telegram-start.bat","package.json","README.md","RELEASE.md")) {
   $src = Join-Path $ScriptDir $file
   if (Test-Path -LiteralPath $src) {
     Copy-Item -LiteralPath $src -Destination (Join-Path $PiAppDir $file) -Force
@@ -199,6 +204,23 @@ call "$PiAppDir\start.bat" %*
 "@
 $batLauncher | Set-Content -Path (Join-Path $PiBinDir "resonant.bat") -Encoding ASCII
 
+$psHeartbeatLauncher = @"
+`$env:RESONANT_HOME = "$PiHome"
+`$env:PI_HOME = "$PiHome"
+`$env:PI_CODING_AGENT_DIR = "$PiAgentDir"
+& "$PiAppDir\heartbeat-start.ps1" @args
+"@
+$psHeartbeatLauncher | Set-Content -Path (Join-Path $PiBinDir "resonant-heartbeat.ps1") -Encoding UTF8
+
+$batHeartbeatLauncher = @"
+@echo off
+set "RESONANT_HOME=$PiHome"
+set "PI_HOME=$PiHome"
+set "PI_CODING_AGENT_DIR=$PiAgentDir"
+call "$PiAppDir\heartbeat-start.bat" %*
+"@
+$batHeartbeatLauncher | Set-Content -Path (Join-Path $PiBinDir "resonant-heartbeat.bat") -Encoding ASCII
+
 Write-Step "Checking pi command..."
 if (Get-Command pi -ErrorAction SilentlyContinue) {
   Write-Step "pi command is available."
@@ -216,6 +238,7 @@ Check-File "$PiAgentDir\SOUL.md" "~/.resonant/agent/SOUL.md"
 Check-File "$PiAgentDir\CONSTITUTION.md" "~/.resonant/agent/CONSTITUTION.md"
 Check-File "$PiAgentDir\FOUNDATION.md" "~/.resonant/agent/FOUNDATION.md"
 Check-File "$PiAgentDir\HEARTBEAT.md" "~/.resonant/agent/HEARTBEAT.md"
+Check-File "$PiAgentDir\heartbeat.json" "~/.resonant/agent/heartbeat.json"
 Check-File "$PiAgentDir\MEMORY.md" "~/.resonant/agent/MEMORY.md"
 Check-File "$PiAgentDir\TOOLS.md" "~/.resonant/agent/TOOLS.md"
 Check-File "$PiAgentDir\ROOMS.md" "~/.resonant/agent/ROOMS.md"
@@ -236,7 +259,8 @@ Write-Step "Next steps:"
 Write-Step "  1. Run $PiAppDir\configure.ps1"
 Write-Step "  2. Start RESONANT Agent with: $PiAppDir\start.ps1"
 Write-Step "  3. Optional launcher: $PiBinDir\resonant.ps1"
-Write-Step "  4. Edit $PiAgentDir\AGENTS.md to customize the resident identity."
+Write-Step "  4. Optional heartbeats: $PiAppDir\heartbeat-start.ps1"
+Write-Step "  5. Edit $PiAgentDir\AGENTS.md to customize the resident identity."
 if ($env:RESONANT_SKIP_CONFIG_PROMPT -ne "1" -and (Test-Path -LiteralPath "$PiAppDir\configure.ps1")) {
   $answer = Read-Host "Run configuration now? [Y/n]"
   if (-not $answer -or $answer.ToLower() -ne "n") {

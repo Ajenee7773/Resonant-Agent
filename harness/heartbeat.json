@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "every": "30m",
+  "runOnStart": true,
+  "target": "console",
+  "showOk": false,
+  "showAlerts": true,
+  "ackMaxChars": 300,
+  "activeHours": null,
+  "telegramChatIds": [],
+  "prompt": "Read HEARTBEAT.md if it exists. Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK."
+}

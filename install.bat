@@ -76,6 +76,10 @@ if exist "%HARNESS_DIR%\settings.json" (
   if not exist "%PI_AGENT_DIR%\settings.json" copy /Y "%HARNESS_DIR%\settings.json" "%PI_AGENT_DIR%\settings.json" >nul
 )
 
+if exist "%HARNESS_DIR%\heartbeat.json" (
+  if not exist "%PI_AGENT_DIR%\heartbeat.json" copy /Y "%HARNESS_DIR%\heartbeat.json" "%PI_AGENT_DIR%\heartbeat.json" >nul
+)
+
 if not exist "%PI_AGENT_DIR%\auth.json" echo {}>"%PI_AGENT_DIR%\auth.json"
 
 if exist "%HARNESS_DIR%\boot" xcopy "%HARNESS_DIR%\boot" "%PI_AGENT_DIR%\boot\" /E /I /Y >nul
@@ -94,8 +98,9 @@ echo Copying RESONANT Agent launchers...
 if exist "%SCRIPT_DIR%bridge" xcopy "%SCRIPT_DIR%bridge" "%PI_APP_DIR%\bridge\" /E /I /Y >nul
 if exist "%SCRIPT_DIR%scripts" xcopy "%SCRIPT_DIR%scripts" "%PI_APP_DIR%\scripts\" /E /I /Y >nul
 if exist "%SCRIPT_DIR%ui" xcopy "%SCRIPT_DIR%ui" "%PI_APP_DIR%\ui\" /E /I /Y >nul
+if exist "%SCRIPT_DIR%heartbeat" xcopy "%SCRIPT_DIR%heartbeat" "%PI_APP_DIR%\heartbeat\" /E /I /Y >nul
 if exist "%SCRIPT_DIR%telegram" xcopy "%SCRIPT_DIR%telegram" "%PI_APP_DIR%\telegram\" /E /I /Y >nul
-for %%F in (install.bat install.ps1 configure.bat configure.ps1 start.bat start.ps1 ui.bat telegram-setup.bat telegram-start.bat package.json README.md RELEASE.md) do (
+for %%F in (install.bat install.ps1 configure.bat configure.ps1 start.bat start.ps1 ui.bat heartbeat-start.bat heartbeat-start.ps1 telegram-setup.bat telegram-start.bat package.json README.md RELEASE.md) do (
   if exist "%SCRIPT_DIR%%%F" copy /Y "%SCRIPT_DIR%%%F" "%PI_APP_DIR%\%%F" >nul
 )
 (
@@ -105,6 +110,14 @@ for %%F in (install.bat install.ps1 configure.bat configure.ps1 start.bat start.
   echo set "PI_CODING_AGENT_DIR=%PI_AGENT_DIR%"
   echo call "%PI_APP_DIR%\start.bat" %%*
 ) > "%PI_BIN_DIR%\resonant.bat"
+
+(
+  echo @echo off
+  echo set "RESONANT_HOME=%PI_HOME%"
+  echo set "PI_HOME=%PI_HOME%"
+  echo set "PI_CODING_AGENT_DIR=%PI_AGENT_DIR%"
+  echo call "%PI_APP_DIR%\heartbeat-start.bat" %%*
+) > "%PI_BIN_DIR%\resonant-heartbeat.bat"
 
 echo Checking pi command...
 where pi >nul 2>nul
@@ -129,6 +142,7 @@ call :CheckFile "%PI_AGENT_DIR%\SOUL.md" "~/.resonant/agent/SOUL.md"
 call :CheckFile "%PI_AGENT_DIR%\CONSTITUTION.md" "~/.resonant/agent/CONSTITUTION.md"
 call :CheckFile "%PI_AGENT_DIR%\FOUNDATION.md" "~/.resonant/agent/FOUNDATION.md"
 call :CheckFile "%PI_AGENT_DIR%\HEARTBEAT.md" "~/.resonant/agent/HEARTBEAT.md"
+call :CheckFile "%PI_AGENT_DIR%\heartbeat.json" "~/.resonant/agent/heartbeat.json"
 call :CheckFile "%PI_AGENT_DIR%\MEMORY.md" "~/.resonant/agent/MEMORY.md"
 call :CheckFile "%PI_AGENT_DIR%\TOOLS.md" "~/.resonant/agent/TOOLS.md"
 call :CheckFile "%PI_AGENT_DIR%\ROOMS.md" "~/.resonant/agent/ROOMS.md"
@@ -149,7 +163,8 @@ echo Next steps:
 echo   1. Run %PI_APP_DIR%\configure.bat
 echo   2. Start RESONANT Agent with: %PI_APP_DIR%\start.bat
 echo   3. Optional launcher: %PI_BIN_DIR%\resonant.bat
-echo   4. Edit %PI_AGENT_DIR%\AGENTS.md to customize the resident identity.
+echo   4. Optional heartbeats: %PI_APP_DIR%\heartbeat-start.bat
+echo   5. Edit %PI_AGENT_DIR%\AGENTS.md to customize the resident identity.
 
 endlocal
 exit /b 0

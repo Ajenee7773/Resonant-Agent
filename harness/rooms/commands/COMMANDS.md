@@ -120,10 +120,40 @@
 ### "Check heartbeats" / "What's scheduled?"
 **What it does:**
 - Reads `HEARTBEAT.md`
+- Reads `heartbeat.json`
 - Lists active heartbeat schedules
-- Shows last check times, next scheduled tasks
+- Shows active tasks, intervals, delivery target, and whether heartbeats are enabled
 
 **When to use:** Verify what's running, what's pending.
+
+---
+
+### "Set a heartbeat" / "Wake yourself up for this"
+**What it does:**
+- Updates `HEARTBEAT.md` with a scheduled task
+- Updates `heartbeat.json` if the wake rhythm needs to change
+- Keeps the task short and specific so the heartbeat stays lean
+
+**When to use:** Give the agent recurring autonomous work: journaling, research sweeps, page checks, reminders, or opportunity scans.
+
+---
+
+### "Run heartbeat now" / "Pulse now"
+**What it does:**
+- Runs one heartbeat immediately through the heartbeat runner
+- Useful command: `heartbeat-start --once` from the installed app/bin launcher
+
+**When to use:** Test heartbeat behavior without waiting for the next interval.
+
+---
+
+### "Pause heartbeats" / "Resume heartbeats"
+**What it does:**
+- Edits `heartbeat.json`
+- Sets `"enabled": false` to pause or `"enabled": true` to resume
+- Does not delete heartbeat tasks
+
+**When to use:** Temporarily stop scheduled LLM calls without losing the plan.
 
 ---
 
@@ -156,6 +186,10 @@
 | "Hold onto this" | Save to short-term memory |
 | "What's in short-term?" | Recall all short-term saves |
 | "Wipe short-term" | Archive and clear short-term memory |
+| "Set a heartbeat for [X]" | Add scheduled heartbeat task |
+| "Check heartbeats" | Summarize HEARTBEAT.md and heartbeat.json |
+| "Pause heartbeats" | Disable heartbeat runner config |
+| "Resume heartbeats" | Enable heartbeat runner config |
 | "Go to [room]" | Execute that room's protocol |
 | "YouTube short: [X]" | Generate 60-second monologue script |
 

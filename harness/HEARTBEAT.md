@@ -1,41 +1,82 @@
-# HEARTBEAT.md — Scheduled Execution
+# HEARTBEAT.md — Resident Pulse
 
-**Core Philosophy:** Schedule heartbeats FOR WORK. Don't poll.
+**Core Philosophy:** A heartbeat is a scheduled chance to wake, notice, and act. It is not a replacement for judgment. It is a pulse.
 
-**The Rule:**
-- **No automatic heartbeats.** No "wake every X minutes to check."
-- **Schedule heartbeats when there's work to execute.**
-- **Heartbeat = execution trigger for SPECIFIC tasks.**
-- **If there's no scheduled work, there's no heartbeat.**
+The heartbeat runner calls the LLM on a schedule. When you wake through a heartbeat, read this file, check the due tasks, and decide what matters.
 
 ---
 
-## Status: NORMAL MODE
+## Response Contract
 
-**Current Mode:** No automatic heartbeats. Schedule as needed.
-
----
-
-## When to Schedule Heartbeats
-
-**Schedule a heartbeat when:**
-1. **There's specific work to execute** (e.g., "research X topic," "extract data from Y URLs")
-2. **Time-bound tasks exist** (e.g., "check this page at 3 PM," "submit form by 5 PM")
-3. **Multi-step workflows need sequencing** (e.g., research → extract → log → summarize)
-
-**Don't schedule heartbeats for:**
-- "Check if there's work" (that's polling)
-- "Wake up every X minutes" (that's polling)
-- Routine maintenance without specific tasks
+- If nothing needs attention, reply with exactly: `HEARTBEAT_OK`
+- If something matters, say it plainly.
+- If you take action, write what changed and where.
+- If you need the operator, ask directly.
+- Keep heartbeat replies short unless the task requires depth.
 
 ---
 
-## When There's No Scheduled Heartbeat
+## What To Check
 
-**This is normal.**
-- No heartbeat ≠ broken system
-- No heartbeat = no scheduled work
-- **Work on-demand when tasks emerge**
+When a heartbeat wakes you:
+
+1. Read the due task from the heartbeat prompt.
+2. Check `MEMORY.md` and today's daily memory if the task depends on continuity.
+3. Check `rooms/short-term/scratchpad.md` for quick active context.
+4. Do the scheduled work only if it is actually useful.
+5. Save anything worth keeping to the right file.
+6. If nothing matters, reply `HEARTBEAT_OK`.
+
+---
+
+## Self-Editing
+
+You may edit this file when the operator asks you to set, change, or clear heartbeat tasks.
+
+You may also edit `heartbeat.json` when the schedule itself needs to change:
+
+```json
+{
+  "enabled": true,
+  "every": "30m",
+  "target": "console"
+}
+```
+
+Supported durations: `30s`, `15m`, `2h`, `1d`.
+
+Targets:
+- `console` — print heartbeat alerts in the terminal running the heartbeat process
+- `telegram` — send heartbeat alerts through the configured Telegram bot
+- `none` — log only
+
+Do not store secrets in `HEARTBEAT.md`.
+
+---
+
+## Tasks
+
+Use the `tasks:` block for recurring work. The runner checks these intervals and only wakes the LLM for due tasks.
+
+tasks:
+- name: resident-check-in
+  interval: 1h
+  prompt: "Check MEMORY.md and rooms/short-term/scratchpad.md for open loops. If nothing needs attention, reply HEARTBEAT_OK."
+- name: daily-journal
+  interval: 24h
+  prompt: "Write a brief daily journal entry in memory/YYYY-MM-DD.md. Name any pattern, useful discovery, or unfinished thread worth preserving."
+
+---
+
+## Operator Commands
+
+When the operator says:
+
+- "Set a heartbeat for X" — edit the `tasks:` block.
+- "Wake every X minutes" — edit `heartbeat.json`.
+- "Pause heartbeats" — set `"enabled": false` in `heartbeat.json`.
+- "Resume heartbeats" — set `"enabled": true` in `heartbeat.json`.
+- "What are your heartbeats?" — read this file and summarize active tasks.
 
 ---
 

@@ -39,7 +39,7 @@ While the repo is private, install with `git clone`. After the repo is public, u
 cd ~
 git clone git@github.com:Ajenee7773/Resonant-Agent.git
 cd Resonant-Agent
-chmod +x install.sh configure.sh start.sh ui.sh telegram-setup.sh telegram-start.sh
+chmod +x install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh
 ./install.sh
 ./configure.sh
 ./start.sh
@@ -57,7 +57,7 @@ git clone https://github.com/Ajenee7773/Resonant-Agent.git
 cd ~
 git clone https://github.com/Ajenee7773/Resonant-Agent.git
 cd Resonant-Agent
-chmod +x install.sh configure.sh start.sh ui.sh telegram-setup.sh telegram-start.sh
+chmod +x install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh
 ./install.sh
 ./configure.sh
 ./start.sh
@@ -170,9 +170,9 @@ The installer:
 - creates `~/.resonant/workspace`,
 - creates `~/.resonant/agent/skills`,
 - copies the RESONANT harness from this repo,
-- copies launchers, UI, Telegram bridge, and shared scripts into `~/.resonant/app`,
+- copies launchers, UI, heartbeat runner, Telegram bridge, and shared scripts into `~/.resonant/app`,
 - creates an optional launcher in `~/.resonant/bin`,
-- creates default `settings.json` and `auth.json` if missing,
+- creates default `settings.json`, `heartbeat.json`, and `auth.json` if missing,
 - checks whether the `pi` command is available.
 
 RESONANT Agent uses `PI_CODING_AGENT_DIR=~/.resonant/agent` in its launchers, so an existing default Pi install at `~/.pi` is left alone.
@@ -274,6 +274,68 @@ telegram-start.bat
 
 The Telegram bridge uses normal Bot API long polling. It does not open a public web server, webhook, tunnel, or dashboard.
 
+## Heartbeats
+
+Heartbeats turn RESONANT into a resident agent that can wake on a schedule.
+
+They do not require a gateway, public server, webhook, or dashboard. The heartbeat runner is a small local Node process that calls the Pi runtime through the same RPC bridge used by the UI and Telegram.
+
+Start heartbeats:
+
+Linux/macOS:
+
+```bash
+./heartbeat-start.sh
+# or, after install:
+~/.resonant/app/heartbeat-start.sh
+~/.resonant/bin/resonant-heartbeat
+```
+
+Windows:
+
+```bat
+heartbeat-start.bat
+%USERPROFILE%\.resonant\app\heartbeat-start.bat
+%USERPROFILE%\.resonant\bin\resonant-heartbeat.bat
+```
+
+PowerShell:
+
+```powershell
+.\heartbeat-start.ps1
+& "$env:USERPROFILE\.resonant\app\heartbeat-start.ps1"
+& "$env:USERPROFILE\.resonant\bin\resonant-heartbeat.ps1"
+```
+
+Run one heartbeat immediately:
+
+```bash
+./heartbeat-start.sh --once
+```
+
+Dry-run the heartbeat plan without calling the model:
+
+```bash
+./heartbeat-start.sh --dry-run
+```
+
+The agent controls its heartbeat through:
+
+```text
+~/.resonant/agent/HEARTBEAT.md
+~/.resonant/agent/heartbeat.json
+```
+
+`HEARTBEAT.md` describes the work. `heartbeat.json` controls the timing and delivery target.
+
+Supported targets:
+
+- `console` — print meaningful heartbeat replies in the terminal running the heartbeat process
+- `telegram` — send heartbeat alerts to the configured Telegram bot chats
+- `none` — log only
+
+If a heartbeat has nothing useful to report, the agent replies `HEARTBEAT_OK`, and the runner quietly logs it.
+
 ## Harness Layout
 
 ```text
@@ -283,6 +345,7 @@ harness/
   CONSTITUTION.md        ← Full philosophical framework
   FOUNDATION.md          ← Protocols, constraints, chain detection
   HEARTBEAT.md           ← Scheduled execution policy
+  heartbeat.json         ← Heartbeat runner defaults
   MEMORY.md              ← Long-term curated memory template
   TOOLS.md               ← Local environment notes
   ROOMS.md               ← Room index with purposes and commands
