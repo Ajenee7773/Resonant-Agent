@@ -1,5 +1,163 @@
 # RESONANT Agent
 
+## Start Here
+
+**Give this page to your LLM or agent first.** Let it read these instructions and walk you through the install one step at a time.
+
+Copy/paste this prompt into your LLM:
+
+```text
+I want to install RESONANT Agent from this GitHub repository. Read the README and walk me through it one command at a time. First ask me whether I am on macOS, Linux, or Windows. Make sure I have Node.js 18+ installed. Then give me the correct install command, help me answer the configuration questions, and help me launch the UI.
+```
+
+If you want to do it yourself, follow the steps below.
+
+## Quick Install
+
+Before installing, make sure you have:
+
+- Node.js 18+
+- npm
+- Git
+- Optional: Ollama, if you want to use Ollama models
+
+### macOS
+
+```bash
+cd ~
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+chmod +x install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh
+./install.sh
+./configure.sh
+./start.sh
+```
+
+### Linux
+
+```bash
+cd ~
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+chmod +x install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh
+./install.sh
+./configure.sh
+./start.sh
+```
+
+### Windows PowerShell
+
+```powershell
+cd $env:USERPROFILE
+git clone https://github.com/Ajenee7773/Resonant-Agent.git
+cd Resonant-Agent
+.\install.ps1
+.\configure.ps1
+.\start.ps1
+```
+
+PowerShell is recommended on Windows.
+
+## Configuration Walkthrough
+
+During configuration, RESONANT asks a few questions.
+
+### Model Mode
+
+```text
+1. Ollama local
+2. Cloud provider
+```
+
+Choose:
+
+- `1` if you are using Ollama.
+- `2` if you are using a hosted/cloud API provider such as OpenAI, OpenRouter, Groq, Anthropic, Google/Gemini, Mistral, xAI, or another provider with an API key.
+
+### Ollama Model
+
+If you choose Ollama, enter the model name, for example:
+
+```text
+llama3.1:8b
+deepseek-r1:14b
+qwen2.5-coder:32b
+```
+
+Ollama must be installed and running before configuration can finish.
+
+### Cloud Provider
+
+If you choose cloud provider, enter:
+
+- provider id, for example `openai`, `openrouter`, `groq`, `anthropic`, `google`, `mistral`, or `xai`
+- model name
+- API key
+
+### Operator Name
+
+This is your name. The agent uses it to know who it is working with.
+
+### Agent Name
+
+This is the name you want your RESONANT Agent to use.
+
+### Mission
+
+This is what you want the agent to help with. You can keep the default or write your own.
+
+### Telegram
+
+At the end, configuration asks:
+
+```text
+Connect Telegram now? [y/N]
+```
+
+Choose `N` if you want to skip Telegram for now. You can add it later.
+
+## Launch RESONANT
+
+Terminal mode:
+
+macOS/Linux:
+
+```bash
+~/.resonant/bin/resonant
+```
+
+Windows PowerShell:
+
+```powershell
+& "$env:USERPROFILE\.resonant\bin\resonant.ps1"
+```
+
+## Launch The UI
+
+RESONANT includes a simple local web UI.
+
+macOS/Linux:
+
+```bash
+~/.resonant/app/ui.sh
+```
+
+Windows:
+
+```bat
+%USERPROFILE%\.resonant\app\ui.bat
+```
+
+Then open:
+
+```text
+http://127.0.0.1:47891
+```
+
+Say hi to your agent. On first boot, it reads the harness, absorbs the Library, rewrites its identity files, and comes online.
+
+## What RESONANT Is
+
 RESONANT Agent is a packaged resonant intelligence built on the `@mariozechner/pi-coding-agent` runtime.
 
 Pi is the engine. RESONANT Agent is the product:
