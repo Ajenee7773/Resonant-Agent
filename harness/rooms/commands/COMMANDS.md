@@ -29,7 +29,7 @@
 
 ## 🧠 Memory Commands
 
-### "Save to short-term" / "Log this"
+### "Log this" / "Save to today's memory"
 **What it does:**
 - Writes to `memory/YYYY-MM-DD.md` (today's daily file)
 - Raw session log, events, decisions
@@ -54,6 +54,34 @@
 - Summarizes current context, active projects, key decisions
 
 **When to use:** After context reset, or to verify what the agent knows.
+
+---
+
+### "Save to short-term" / "Hold onto this"
+**What it does:**
+- Appends information to `rooms/short-term/scratchpad.md` with timestamp
+- Agent decides importance — may also save to long-term memory or project files
+
+**When to use:** Quick save something for this session or today.
+
+---
+
+### "What's in short-term?" / "Quick recall"
+**What it does:**
+- Reads `rooms/short-term/scratchpad.md`
+- Presents all short-term notes in plain language
+
+**When to use:** "What did I tell you to remember?" Quick check of recent saves.
+
+---
+
+### "Clear short-term" / "Wipe short-term"
+**What it does:**
+- Archives current scratchpad to `rooms/short-term/archive/YYYY-MM-DD.md`
+- Starts fresh with empty scratchpad
+- Nothing is lost — just moved out of active recall
+
+**When to use:** Starting a new session, or done with today's quick saves.
 
 ---
 
@@ -125,6 +153,9 @@
 | "Script this" | Write script from research/bullets |
 | "Log this" | Save to today's memory file |
 | "Remember this" | Save to MEMORY.md (long-term) |
+| "Hold onto this" | Save to short-term memory |
+| "What's in short-term?" | Recall all short-term saves |
+| "Wipe short-term" | Archive and clear short-term memory |
 | "Go to [room]" | Execute that room's protocol |
 | "YouTube short: [X]" | Generate 60-second monologue script |
 
