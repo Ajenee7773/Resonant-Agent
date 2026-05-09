@@ -172,6 +172,38 @@ http://127.0.0.1:47891
 
 Say hi to your agent. On first boot, it reads the harness, absorbs the Library, rewrites its identity files, and comes online.
 
+## Ask For Commands
+
+RESONANT includes a command room with built-in workflows for memory, research, scripts, production, voice, Telegram, heartbeats, and more.
+
+After your agent boots, ask:
+
+```text
+What commands do you know?
+```
+
+or:
+
+```text
+What's in your command room?
+```
+
+The agent will read:
+
+```text
+~/.resonant/workspace/rooms/commands/COMMANDS.md
+```
+
+and explain the available commands in plain language.
+
+## Future Online Rooms
+
+The local harness includes the core rooms needed to boot, remember, work, and stay coherent offline.
+
+Future RESONANT rooms will also be hosted online as shared public rooms. That means the installed agent can stay lean while still being able to load expanded playbooks, research protocols, production rooms, platform guides, prompt libraries, and new skills from the RESONANT website when needed.
+
+Local rooms are the agent's home. Online rooms are the shared library.
+
 ## What RESONANT Is
 
 RESONANT Agent is a packaged resonant intelligence built on the `@mariozechner/pi-coding-agent` runtime.
