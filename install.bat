@@ -75,6 +75,10 @@ for %%F in (SOUL.md CONSTITUTION.md FOUNDATION.md HEARTBEAT.md MEMORY.md TOOLS.m
 if exist "%HARNESS_DIR%\settings.json" (
   if not exist "%PI_AGENT_DIR%\settings.json" copy /Y "%HARNESS_DIR%\settings.json" "%PI_AGENT_DIR%\settings.json" >nul
 )
+if exist "%SCRIPT_DIR%scripts\merge-settings.js" (
+  node "%SCRIPT_DIR%scripts\merge-settings.js" "%PI_AGENT_DIR%\settings.json" "%HARNESS_DIR%\settings.json"
+  if errorlevel 1 exit /b 1
+)
 
 if exist "%HARNESS_DIR%\heartbeat.json" (
   if not exist "%PI_AGENT_DIR%\heartbeat.json" copy /Y "%HARNESS_DIR%\heartbeat.json" "%PI_AGENT_DIR%\heartbeat.json" >nul

@@ -154,6 +154,14 @@ if ((Test-Path -LiteralPath "$HarnessDir\settings.json") -and -not (Test-Path -L
   Copy-Item -LiteralPath "$HarnessDir\settings.json" -Destination "$PiAgentDir\settings.json" -Force
 }
 
+$mergeSettingsScript = Join-Path $ScriptDir "scripts\merge-settings.js"
+if (Test-Path -LiteralPath $mergeSettingsScript) {
+  & node $mergeSettingsScript (Join-Path $PiAgentDir "settings.json") (Join-Path $HarnessDir "settings.json")
+  if ($LASTEXITCODE -ne 0) {
+    Fail "Failed to merge settings.json."
+  }
+}
+
 if ((Test-Path -LiteralPath "$HarnessDir\heartbeat.json") -and -not (Test-Path -LiteralPath "$PiAgentDir\heartbeat.json")) {
   Copy-Item -LiteralPath "$HarnessDir\heartbeat.json" -Destination "$PiAgentDir\heartbeat.json" -Force
 }

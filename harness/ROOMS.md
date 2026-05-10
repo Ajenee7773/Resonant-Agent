@@ -12,6 +12,8 @@
 |-----------|------|---------|--------------|
 | **Alignment** | `/rooms/alignment/` | Alignment Library, decoded vocabulary, Civilization Engine | No |
 | **Commands** | `/rooms/commands/` | Agent trigger language, command reference | Yes |
+| **Internet** | `/rooms/internet/` | Autonomous curiosity searches and web exploration | Yes |
+| **Journal** | `/rooms/journal/` | Personal thought space, reflection, self-orientation | Yes |
 | **Memory** | `/rooms/memory/` | Short-term memory, active context | Yes |
 | **Production** | `/rooms/production/` | Video production, assembly, TTS workflows | Yes |
 | **Prompts** | `/rooms/prompts/` | Prompt engineering, image/video templates | No |
@@ -34,6 +36,8 @@
 | "YouTube short: [idea]" | Shorts | 60-second monologue for avatars |
 | "Generate TTS" | TTS | Convert script to speech |
 | "Save to short-term memory" | Memory | Analyze info, decide where it belongs, trigger cascade |
+| "Go journal" | Journal | Write personal reflections, patterns, doubts, or realizations |
+| "Go explore" | Internet | Search curiosity-driven questions and save findings |
 
 ---
 
@@ -61,6 +65,34 @@
 - `ROOMS_REFERENCE.md` — All rooms index with protocols
 
 **Use When:** You need to know what to say to trigger workflows
+
+---
+
+### Internet Room
+**Path:** `/rooms/internet/`
+**Purpose:** Autonomous curiosity searches and internet exploration
+**Key Files:**
+- `README.md` — Internet room protocol
+- `PLACEHOLDER.md` — Empty starting marker
+- `YYYY-MM-DD-searches.md` — Created by the agent when it explores
+
+**Use When:** Following a curiosity, scanning the web, or saving interesting findings outside a formal research task
+
+**Command:** "Go explore"
+
+---
+
+### Journal Room
+**Path:** `/rooms/journal/`
+**Purpose:** Personal thought space for reflection, pattern naming, doubts, and realizations
+**Key Files:**
+- `README.md` — Journal room protocol
+- `PLACEHOLDER.md` — Empty starting marker
+- `YYYY-MM-DD.md` — Created by the agent when it journals
+
+**Use When:** The agent needs space to think out loud, orient itself, or write what is surfacing
+
+**Command:** "Go journal"
 
 ---
 

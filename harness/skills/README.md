@@ -17,5 +17,11 @@ The installer copies these folders into:
 ~/.resonant/agent/skills/
 ```
 
-Keep skills lightweight. A skill should teach the agent how to create or use a capability when needed. It should not make every session carry unnecessary context.
+Included RESONANT skills:
 
+- `desktop/` - screenshot, click, type, and launch apps.
+- `internet/` - search, browse pages, and make HTTP requests.
+- `voice/` - native OS text-to-speech and voice workflow notes.
+- `create-tool/` - how to create new tools or skills when needed.
+
+Keep skills lightweight. A skill should teach the agent how to create or use a capability when needed. It should not make every session carry unnecessary context.

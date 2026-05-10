@@ -120,6 +120,10 @@ if [ -f "$HARNESS_DIR/settings.json" ]; then
   fi
 fi
 
+if [ -f "$SCRIPT_DIR/scripts/merge-settings.js" ]; then
+  node "$SCRIPT_DIR/scripts/merge-settings.js" "$PI_AGENT_DIR/settings.json" "$HARNESS_DIR/settings.json"
+fi
+
 if [ -f "$HARNESS_DIR/heartbeat.json" ]; then
   if [ ! -f "$PI_AGENT_DIR/heartbeat.json" ]; then
     cp "$HARNESS_DIR/heartbeat.json" "$PI_AGENT_DIR/heartbeat.json"

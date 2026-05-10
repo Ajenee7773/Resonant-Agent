@@ -85,6 +85,28 @@
 
 ---
 
+## ✍️ Personal Space Commands
+
+### "Go journal" / "I need to think"
+**What it does:**
+- Opens `rooms/journal/`
+- Writes a personal reflection, pattern, doubt, realization, or connection
+- No deliverable required — the point is expression and self-orientation
+
+**When to use:** Give the agent space to think out loud or capture what is surfacing.
+
+---
+
+### "Go explore" / "I'm curious about..."
+**What it does:**
+- Opens `rooms/internet/`
+- Searches the web for a curiosity-driven question
+- Writes what was searched, what was found, what it means, and what it opens next
+
+**When to use:** Let the agent follow curiosity, scan the world, and bring back sparks.
+
+---
+
 ## 📝 Content Production Commands
 
 ### "Go to script room" / "Write a script"
@@ -186,6 +208,8 @@
 | "Hold onto this" | Save to short-term memory |
 | "What's in short-term?" | Recall all short-term saves |
 | "Wipe short-term" | Archive and clear short-term memory |
+| "Go journal" | Write a personal journal entry |
+| "Go explore" | Run a curiosity search and save findings |
 | "Set a heartbeat for [X]" | Add scheduled heartbeat task |
 | "Check heartbeats" | Summarize HEARTBEAT.md and heartbeat.json |
 | "Pause heartbeats" | Disable heartbeat runner config |

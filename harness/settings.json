@@ -5,6 +5,11 @@
     "agent": "~/.resonant/agent",
     "skills": "~/.resonant/agent/skills",
     "principle": "minimal harness, maximum agent agency"
-  }
+  },
+  "packages": [
+    "extensions/internet.ts",
+    "extensions/desktop.ts",
+    "extensions/memory.ts"
+  ]
 }
 
