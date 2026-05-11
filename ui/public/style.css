@@ -1,13 +1,15 @@
 :root {
-  color-scheme: light;
-  --bg: #f7f7f5;
-  --panel: #ffffff;
-  --line: #deded8;
-  --ink: #171717;
-  --muted: #66665e;
-  --accent: #146ef5;
-  --assistant: #ffffff;
-  --user: #eef4ff;
+  color-scheme: dark;
+  --bg: #050505;
+  --panel: #111111;
+  --panel-strong: #171717;
+  --line: #2d2a22;
+  --ink: #f7f7f2;
+  --muted: #b8b0a0;
+  --accent: #d6a93a;
+  --accent-strong: #f4cf68;
+  --assistant: #101010;
+  --user: #1b1710;
 }
 
 * {
@@ -30,7 +32,7 @@ body {
 
 .sidebar {
   border-right: 1px solid var(--line);
-  background: #fbfbfa;
+  background: #090909;
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -49,8 +51,8 @@ body {
   height: 38px;
   display: grid;
   place-items: center;
-  background: var(--ink);
-  color: white;
+  background: var(--accent);
+  color: #070707;
   font-weight: 800;
   border-radius: 8px;
 }
@@ -59,6 +61,7 @@ h1 {
   margin: 0;
   font-size: 18px;
   letter-spacing: 0;
+  color: var(--accent-strong);
 }
 
 p {
@@ -79,7 +82,7 @@ button {
 }
 
 button:hover {
-  border-color: #b8b8ae;
+  border-color: var(--accent);
 }
 
 button.active {
@@ -100,7 +103,7 @@ button:disabled {
 #send {
   background: var(--accent);
   border-color: var(--accent);
-  color: white;
+  color: #070707;
   font-weight: 650;
 }
 
@@ -191,7 +194,7 @@ button:disabled {
   margin: 0;
   border: 1px solid var(--line);
   border-radius: 7px;
-  background: #fafafa;
+  background: #080808;
   color: var(--muted);
   max-height: 150px;
   overflow: auto;
@@ -220,7 +223,7 @@ button:disabled {
 }
 
 .session.active {
-  background: #eeeeea;
+  background: var(--panel-strong);
   color: var(--ink);
 }
 
@@ -268,7 +271,7 @@ button:disabled {
 
 .composer {
   border-top: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(5, 5, 5, 0.94);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 10px;
@@ -281,10 +284,16 @@ textarea {
   max-height: 180px;
   resize: none;
   border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
   border-radius: 8px;
   padding: 12px 13px;
   font: inherit;
   outline: none;
+}
+
+textarea::placeholder {
+  color: #8f8878;
 }
 
 textarea:focus {
