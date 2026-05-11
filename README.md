@@ -445,6 +445,12 @@ The UI also includes optional browser voice controls:
 - **Mic** fills the input box when browser speech recognition is available.
 - **Voice** reads assistant replies aloud using the browser's speech synthesis.
 
+The sidebar also shows a compact heartbeat panel:
+
+- status pulse for running, ready, paused, or stale heartbeat state
+- current interval, delivery target, task count, and due count
+- controls for Start, Pause/Resume, Run Once, and Dry Run
+
 ## Voice
 
 RESONANT Agent includes a lightweight native voice skill. It is off by default and activates when the operator asks for voice.
@@ -585,6 +591,8 @@ Supported targets:
 - `none` — log only
 
 If a heartbeat has nothing useful to report, the agent replies `HEARTBEAT_OK`, and the runner quietly logs it.
+
+The local UI can also show heartbeat status and trigger a dry run, one-time pulse, or pause/resume from the sidebar. The UI does not replace the heartbeat runner; it is only a window and control surface for the same local heartbeat files.
 
 ## Harness Layout
 

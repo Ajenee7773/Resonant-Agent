@@ -6,6 +6,15 @@ const statusEl = document.querySelector("#status");
 const newChatButton = document.querySelector("#newChat");
 const voiceInputButton = document.querySelector("#voiceInput");
 const speakToggleButton = document.querySelector("#speakToggle");
+const heartbeatDot = document.querySelector("#heartbeatDot");
+const heartbeatState = document.querySelector("#heartbeatState");
+const heartbeatMeta = document.querySelector("#heartbeatMeta");
+const heartbeatLast = document.querySelector("#heartbeatLast");
+const heartbeatStart = document.querySelector("#heartbeatStart");
+const heartbeatToggle = document.querySelector("#heartbeatToggle");
+const heartbeatOnce = document.querySelector("#heartbeatOnce");
+const heartbeatDryRun = document.querySelector("#heartbeatDryRun");
+const heartbeatOutput = document.querySelector("#heartbeatOutput");
 
 const storageKey = "resonant.chat.messages";
 const speakStorageKey = "resonant.voice.speakReplies";
@@ -13,6 +22,8 @@ let messages = [];
 let speakReplies = localStorage.getItem(speakStorageKey) === "1";
 let recognition = null;
 let recognizing = false;
+let heartbeat = null;
+let heartbeatBusy = false;
 
 function loadMessages() {
   try {
@@ -109,6 +120,88 @@ async function refreshStatus() {
       : "Pi not found";
   } catch {
     statusEl.textContent = "Offline";
+  }
+}
+
+function summarizeLog(text) {
+  const clean = String(text || "").trim();
+  if (!clean) return "";
+  return clean.replace(/\s+/g, " ").slice(0, 220);
+}
+
+function setHeartbeatBusy(value) {
+  heartbeatBusy = value;
+  for (const button of [heartbeatStart, heartbeatToggle, heartbeatOnce, heartbeatDryRun]) {
+    button.disabled = value;
+  }
+}
+
+function renderHeartbeat() {
+  if (!heartbeat) return;
+
+  heartbeatDot.classList.remove("live", "waiting", "paused", "error");
+  if (!heartbeat.hasHeartbeatFile) {
+    heartbeatDot.classList.add("error");
+    heartbeatState.textContent = "Missing";
+  } else if (!heartbeat.enabled) {
+    heartbeatDot.classList.add("paused");
+    heartbeatState.textContent = "Paused";
+  } else if (heartbeat.running) {
+    heartbeatDot.classList.add("live");
+    heartbeatState.textContent = "Pulsing";
+  } else if (heartbeat.staleLock) {
+    heartbeatDot.classList.add("error");
+    heartbeatState.textContent = "Stale lock";
+  } else {
+    heartbeatDot.classList.add("waiting");
+    heartbeatState.textContent = "Ready";
+  }
+
+  const dueText = heartbeat.dueCount === 1 ? "1 due" : `${heartbeat.dueCount || 0} due`;
+  const taskText = heartbeat.tasks.length === 1 ? "1 task" : `${heartbeat.tasks.length} tasks`;
+  heartbeatMeta.textContent = `${heartbeat.every} · ${heartbeat.target} · ${taskText} · ${dueText}`;
+  heartbeatLast.textContent = summarizeLog(heartbeat.lastLog) || (heartbeat.running ? "Runner online." : "No heartbeat log yet.");
+  heartbeatStart.disabled = heartbeatBusy || heartbeat.running;
+  heartbeatToggle.disabled = heartbeatBusy || !heartbeat.hasHeartbeatFile;
+  heartbeatToggle.textContent = heartbeat.enabled ? "Pause" : "Resume";
+  heartbeatOnce.disabled = heartbeatBusy || !heartbeat.hasHeartbeatFile || !heartbeat.enabled;
+  heartbeatDryRun.disabled = heartbeatBusy || !heartbeat.hasHeartbeatFile;
+}
+
+async function refreshHeartbeat() {
+  try {
+    const res = await fetch("/api/heartbeat", { cache: "no-store" });
+    const payload = await res.json();
+    heartbeat = payload.heartbeat;
+    renderHeartbeat();
+  } catch {
+    heartbeatDot.classList.remove("live", "waiting", "paused");
+    heartbeatDot.classList.add("error");
+    heartbeatState.textContent = "Offline";
+    heartbeatMeta.textContent = "Heartbeat status unavailable.";
+  }
+}
+
+async function heartbeatAction(action, body) {
+  setHeartbeatBusy(true);
+  heartbeatOutput.hidden = false;
+  heartbeatOutput.textContent = action === "run-once" ? "Running heartbeat..." : "Working...";
+
+  try {
+    const res = await fetch(`/api/heartbeat/${action}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body || {}),
+    });
+    const payload = await res.json();
+    if (payload.heartbeat) heartbeat = payload.heartbeat;
+    heartbeatOutput.textContent = payload.output || payload.message || (payload.ok ? "Done." : payload.error || "Heartbeat action failed.");
+    renderHeartbeat();
+  } catch (error) {
+    heartbeatOutput.textContent = error.message;
+  } finally {
+    setHeartbeatBusy(false);
+    renderHeartbeat();
   }
 }
 
@@ -209,6 +302,11 @@ voiceInputButton.addEventListener("click", () => {
   }
 });
 
+heartbeatStart.addEventListener("click", () => heartbeatAction("start"));
+heartbeatToggle.addEventListener("click", () => heartbeatAction("toggle", { enabled: !(heartbeat && heartbeat.enabled) }));
+heartbeatOnce.addEventListener("click", () => heartbeatAction("run-once"));
+heartbeatDryRun.addEventListener("click", () => heartbeatAction("dry-run"));
+
 if (!("speechSynthesis" in window)) {
   speakToggleButton.disabled = true;
   speakToggleButton.title = "Read aloud unavailable";
@@ -218,3 +316,6 @@ setupSpeechRecognition();
 updateSpeakToggle();
 loadMessages();
 refreshStatus();
+refreshHeartbeat();
+setInterval(refreshStatus, 30000);
+setInterval(refreshHeartbeat, 5000);

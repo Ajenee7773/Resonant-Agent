@@ -16,6 +16,24 @@
         </div>
       </div>
       <button id="newChat" type="button">New Chat</button>
+      <section class="heartbeat-card" aria-label="Heartbeat status">
+        <div class="heartbeat-head">
+          <div class="heartbeat-title">
+            <span id="heartbeatDot" class="heartbeat-dot waiting" aria-hidden="true"></span>
+            <span>Heartbeat</span>
+          </div>
+          <span id="heartbeatState" class="heartbeat-state">Checking...</span>
+        </div>
+        <p id="heartbeatMeta">Loading heartbeat...</p>
+        <p id="heartbeatLast" class="heartbeat-last"></p>
+        <div class="heartbeat-actions">
+          <button id="heartbeatStart" type="button">Start</button>
+          <button id="heartbeatToggle" type="button">Pause</button>
+          <button id="heartbeatOnce" type="button">Run Once</button>
+          <button id="heartbeatDryRun" type="button">Dry Run</button>
+        </div>
+        <pre id="heartbeatOutput" class="heartbeat-output" hidden></pre>
+      </section>
       <div class="session-list">
         <div class="session active">Current conversation</div>
       </div>

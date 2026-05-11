@@ -110,7 +110,16 @@ function acquireLock() {
       const fd = fs.openSync(lockPath, "wx");
       fs.writeFileSync(
         fd,
-        JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }, null, 2) + "\n",
+        JSON.stringify(
+          {
+            pid: process.pid,
+            startedAt: new Date().toISOString(),
+            runner: __filename,
+            home: process.env.RESONANT_HOME || path.join(os.homedir(), ".resonant"),
+          },
+          null,
+          2,
+        ) + "\n",
         "utf8",
       );
       fs.closeSync(fd);
@@ -428,21 +437,28 @@ async function runHeartbeat(options = {}) {
   }
 }
 
-function printDryRun(force = false) {
+function dryRunText(force = false) {
   const config = loadConfig();
   const plan = heartbeatPlan(config, force);
-  console.log("RESONANT heartbeat dry run");
-  console.log(`Home: ${process.env.RESONANT_HOME || path.join(os.homedir(), ".resonant")}`);
-  console.log(`Enabled: ${config.enabled}`);
-  console.log(`Every: ${config.every} (${formatDuration(plan.everyMs)})`);
-  console.log(`Target: ${config.target}`);
-  console.log(`Active now: ${plan.active}`);
-  console.log(`HEARTBEAT.md content: ${plan.hasContent ? "present" : "empty/missing"}`);
-  console.log(`Tasks found: ${plan.tasks.length}`);
-  console.log(`Tasks due: ${plan.due.length}`);
+  const lines = [
+    "RESONANT heartbeat dry run",
+    `Home: ${process.env.RESONANT_HOME || path.join(os.homedir(), ".resonant")}`,
+    `Enabled: ${config.enabled}`,
+    `Every: ${config.every} (${formatDuration(plan.everyMs)})`,
+    `Target: ${config.target}`,
+    `Active now: ${plan.active}`,
+    `HEARTBEAT.md content: ${plan.hasContent ? "present" : "empty/missing"}`,
+    `Tasks found: ${plan.tasks.length}`,
+    `Tasks due: ${plan.due.length}`,
+  ];
   for (const task of plan.due) {
-    console.log(`- ${task.name}: ${task.prompt}`);
+    lines.push(`- ${task.name}: ${task.prompt}`);
   }
+  return lines.join("\n");
+}
+
+function printDryRun(force = false) {
+  console.log(dryRunText(force));
 }
 
 function sleep(ms) {
@@ -520,8 +536,15 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  appendLog("HEARTBEAT_FATAL", error.message);
-  console.error(`RESONANT heartbeat failed: ${error.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    appendLog("HEARTBEAT_FATAL", error.message);
+    console.error(`RESONANT heartbeat failed: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  dryRunText,
+  runHeartbeat,
+};
