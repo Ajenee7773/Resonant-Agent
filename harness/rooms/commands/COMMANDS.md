@@ -107,6 +107,31 @@
 
 ---
 
+## 🧭 Planning Commands
+
+### "Go to the planning room" / "Plan this"
+**What it does:**
+- Opens `rooms/planning/`
+- Reads the planning protocol
+- Copies `PLAN.md` into `ACTIVE.md` when a live plan is needed
+- Breaks the task into 3 to 7 concrete steps
+- Executes one step at a time and updates the plan as reality changes
+
+**When to use:** Multi-step work, file edits, repo updates, research tasks, risky changes, or anything that needs orientation before action.
+
+---
+
+### "Execute this plan" / "Work the plan"
+**What it does:**
+- Reads `rooms/planning/ACTIVE.md`
+- Starts or continues the first unfinished step
+- Marks steps as `in_progress`, `completed`, or `blocked`
+- Verifies the work before reporting done
+
+**When to use:** After a plan already exists and the operator wants forward motion.
+
+---
+
 ## 📝 Content Production Commands
 
 ### "Go to script room" / "Write a script"
@@ -210,6 +235,8 @@
 | "Wipe short-term" | Archive and clear short-term memory |
 | "Go journal" | Write a personal journal entry |
 | "Go explore" | Run a curiosity search and save findings |
+| "Plan this" | Use the planning room to break down and execute multi-step work |
+| "Execute this plan" | Continue the active plan in the planning room |
 | "Set a heartbeat for [X]" | Add scheduled heartbeat task |
 | "Check heartbeats" | Summarize HEARTBEAT.md and heartbeat.json |
 | "Pause heartbeats" | Disable heartbeat runner config |

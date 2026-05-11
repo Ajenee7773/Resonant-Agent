@@ -15,6 +15,7 @@
 | **Internet** | `/rooms/internet/` | Autonomous curiosity searches and web exploration | Yes |
 | **Journal** | `/rooms/journal/` | Personal thought space, reflection, self-orientation | Yes |
 | **Memory** | `/rooms/memory/` | Short-term memory, active context | Yes |
+| **Planning** | `/rooms/planning/` | Multi-step planning, execution tracking, verification | Yes |
 | **Production** | `/rooms/production/` | Video production, assembly, TTS workflows | Yes |
 | **Prompts** | `/rooms/prompts/` | Prompt engineering, image/video templates | No |
 | **Research** | `/rooms/research/` | Deep research, internet room, cross-referencing | Yes |
@@ -38,6 +39,8 @@
 | "Save to short-term memory" | Memory | Analyze info, decide where it belongs, trigger cascade |
 | "Go journal" | Journal | Write personal reflections, patterns, doubts, or realizations |
 | "Go explore" | Internet | Search curiosity-driven questions and save findings |
+| "Plan this" | Planning | Break task into steps, execute one at a time, verify |
+| "Execute this plan" | Planning | Continue the active planning room workflow |
 
 ---
 
@@ -104,6 +107,21 @@
 **Use When:** Capturing today's events, decisions, conversations
 
 **Command:** "Save to short-term memory"
+
+---
+
+### Planning Room
+**Path:** `/rooms/planning/`
+**Purpose:** Task planning, step-by-step execution, progress tracking, verification
+**Key Files:**
+- `README.md` — Planning protocol
+- `PLAN.md` — Reusable plan template
+- `ACTIVE.md` — Current live plan
+- `archive/` — Finished plans worth preserving
+
+**Use When:** The operator asks to plan, break something down, execute a multi-step task, edit a project, research before acting, or verify work carefully.
+
+**Command:** "Plan this"
 
 ---
 
