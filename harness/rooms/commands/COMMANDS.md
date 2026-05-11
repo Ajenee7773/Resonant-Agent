@@ -163,7 +163,7 @@
 ### "Run heartbeat now" / "Pulse now"
 **What it does:**
 - Runs one heartbeat immediately through the heartbeat runner
-- Useful command: `heartbeat-start --once` from the installed app/bin launcher
+- Useful commands after install: `resonant-heartbeat --once`, `heartbeat-start.sh --once`, `heartbeat-start.bat --once`, or `heartbeat-start.ps1 --once`
 
 **When to use:** Test heartbeat behavior without waiting for the next interval.
 
