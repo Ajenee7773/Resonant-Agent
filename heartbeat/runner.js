@@ -21,9 +21,12 @@ const configPath = homePath("agent", "heartbeat.json");
 const statePath = homePath("agent", "heartbeat-state.json");
 const heartbeatPath = homePath("agent", "HEARTBEAT.md");
 const logPath = homePath("agent", "heartbeat.log");
+const lockPath = homePath("agent", "heartbeat-runner.lock");
 const telegramConfigPath = homePath("agent", "telegram.json");
 
 let running = true;
+let lockAcquired = false;
+let wakeSleep = null;
 
 function writeJson(file, value, mode) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -87,6 +90,58 @@ function timestamp(date = new Date()) {
 function appendLog(kind, text) {
   fs.mkdirSync(path.dirname(logPath), { recursive: true });
   fs.appendFileSync(logPath, `[${timestamp()}] ${kind}\n${String(text || "").trim()}\n\n`, "utf8");
+}
+
+function processIsAlive(pid) {
+  if (!pid || !Number.isFinite(pid)) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function acquireLock() {
+  fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+
+  while (true) {
+    try {
+      const fd = fs.openSync(lockPath, "wx");
+      fs.writeFileSync(
+        fd,
+        JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }, null, 2) + "\n",
+        "utf8",
+      );
+      fs.closeSync(fd);
+      lockAcquired = true;
+      return;
+    } catch (error) {
+      if (error.code !== "EEXIST") throw error;
+
+      const existing = readJson(lockPath, {});
+      const existingPid = Number(existing.pid);
+      if (processIsAlive(existingPid)) {
+        throw new Error(
+          `RESONANT heartbeat is already running with process id ${existingPid}. Stop that runner before starting another.`,
+        );
+      }
+
+      fs.unlinkSync(lockPath);
+    }
+  }
+}
+
+function releaseLock() {
+  if (!lockAcquired) return;
+  try {
+    const existing = readJson(lockPath, {});
+    if (Number(existing.pid) === process.pid) fs.unlinkSync(lockPath);
+  } catch {
+    // Best effort only; a stale lock is cleaned up on the next start.
+  } finally {
+    lockAcquired = false;
+  }
 }
 
 function unquote(value) {
@@ -391,7 +446,27 @@ function printDryRun(force = false) {
 }
 
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      if (wakeSleep === stop) wakeSleep = null;
+      resolve();
+    }, ms);
+    const stop = () => {
+      clearTimeout(timer);
+      resolve();
+    };
+    wakeSleep = stop;
+  });
+}
+
+function requestStop(message) {
+  running = false;
+  if (message) console.log(message);
+  if (wakeSleep) {
+    const stop = wakeSleep;
+    wakeSleep = null;
+    stop();
+  }
 }
 
 async function main() {
@@ -404,37 +479,44 @@ async function main() {
     return;
   }
 
-  process.on("SIGINT", () => {
-    running = false;
-    console.log("\nStopping RESONANT heartbeat runner.");
-  });
+  process.on("SIGINT", () => requestStop("\nStopping RESONANT heartbeat runner."));
+  process.on("SIGTERM", () => requestStop());
+  process.on("exit", releaseLock);
 
   if (once) {
     await runHeartbeat({ force: true });
     return;
   }
 
-  console.log("RESONANT heartbeat runner online.");
-  console.log("Press Ctrl+C to stop.");
+  try {
+    acquireLock();
 
-  let firstLoop = true;
-  while (running) {
-    const config = loadConfig();
-    const intervalMs = parseDuration(config.every, 30 * 60 * 1000);
-    if (firstLoop && config.runOnStart === false) {
-      console.log(`[${timestamp()}] Waiting ${formatDuration(intervalMs)} before first heartbeat.`);
-    } else {
-      await runHeartbeat({ force: false }).catch((error) => {
-        appendLog("HEARTBEAT_ERROR", error.message);
-        console.error(`Heartbeat warning: ${error.message}`);
-      });
+    console.log("RESONANT heartbeat runner online.");
+    console.log("Press Ctrl+C to stop.");
+
+    let firstLoop = true;
+    while (running) {
+      const config = loadConfig();
+      const intervalMs = parseDuration(config.every, 30 * 60 * 1000);
+      if (firstLoop && config.runOnStart === false) {
+        console.log(`[${timestamp()}] Waiting ${formatDuration(intervalMs)} before first heartbeat.`);
+      } else {
+        await runHeartbeat({ force: false }).catch((error) => {
+          appendLog("HEARTBEAT_ERROR", error.message);
+          console.error(`Heartbeat warning: ${error.message}`);
+        });
+      }
+      firstLoop = false;
+
+      if (!running) break;
+
+      const nextConfig = loadConfig();
+      const nextIntervalMs = parseDuration(nextConfig.every, 30 * 60 * 1000) || 60 * 1000;
+      console.log(`[${timestamp()}] Next heartbeat check in ${formatDuration(nextIntervalMs)}.`);
+      await sleep(nextIntervalMs);
     }
-    firstLoop = false;
-
-    const nextConfig = loadConfig();
-    const nextIntervalMs = parseDuration(nextConfig.every, 30 * 60 * 1000) || 60 * 1000;
-    console.log(`[${timestamp()}] Next heartbeat check in ${formatDuration(nextIntervalMs)}.`);
-    await sleep(nextIntervalMs);
+  } finally {
+    releaseLock();
   }
 }
 

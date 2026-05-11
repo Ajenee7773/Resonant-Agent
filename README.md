@@ -528,6 +528,8 @@ Heartbeats turn RESONANT into a resonant agent that can wake on a schedule.
 
 They do not require a gateway, public server, webhook, or dashboard. The heartbeat runner is a small local Node process that calls the Pi runtime through the same RPC bridge used by the UI and Telegram.
 
+Heartbeats run while the heartbeat process is open. The runner uses a lock file so only one continuous heartbeat loop runs for the agent at a time.
+
 Start heartbeats:
 
 Linux/macOS:
