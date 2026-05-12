@@ -9,6 +9,8 @@ const settingsFile = process.env.SETTINGS_FILE;
 const provider = process.env.RESONANT_PROVIDER || "";
 const model = process.env.RESONANT_MODEL || "";
 const apiKey = process.env.RESONANT_API_KEY || "";
+const contextWindow = parsePositiveInt(process.env.RESONANT_CONTEXT_WINDOW);
+const maxTokens = parsePositiveInt(process.env.RESONANT_MAX_TOKENS);
 
 function readJson(file, fallback) {
   try {
@@ -43,6 +45,30 @@ function envVarForProvider(name) {
   return map[normalized] || `${normalized.toUpperCase().replace(/[^A-Z0-9]/g, "_")}_API_KEY`;
 }
 
+function parsePositiveInt(value) {
+  if (value === undefined || value === null || String(value).trim() === "") return undefined;
+  const parsed = Number.parseInt(String(value).replace(/,/g, "").trim(), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
+function modelLimits() {
+  return {
+    ...(contextWindow ? { contextWindow } : {}),
+    ...(maxTokens ? { maxTokens } : {}),
+  };
+}
+
+function upsertModelEntry(entries, id, patch) {
+  const models = Array.isArray(entries) ? entries : [];
+  let found = false;
+  const next = models.map((entry) => {
+    if (!entry || entry.id !== id) return entry;
+    found = true;
+    return { ...entry, ...patch };
+  });
+  return found ? next : [...next, { id, ...patch }];
+}
+
 if (!agentsFile || !authFile || !modelsFile || !settingsFile) {
   console.error("Missing AGENTS_FILE, AUTH_FILE, MODELS_FILE, or SETTINGS_FILE.");
   process.exit(1);
@@ -58,6 +84,8 @@ const auth = {
   provider,
   model,
 };
+if (contextWindow) auth.contextWindow = contextWindow;
+if (maxTokens) auth.maxTokens = maxTokens;
 if (apiKey) {
   auth.apiKey = apiKey;
   auth.envVar = envVarForProvider(provider);
@@ -76,8 +104,7 @@ models.providers = models.providers || {};
 
 if (provider === "ollama") {
   const existing = models.providers.ollama || {};
-  const existingModels = Array.isArray(existing.models) ? existing.models : [];
-  const hasModel = existingModels.some((entry) => entry && entry.id === model);
+  const limits = modelLimits();
   models.providers.ollama = {
     ...existing,
     baseUrl: existing.baseUrl || "http://localhost:11434/v1",
@@ -88,9 +115,21 @@ if (provider === "ollama") {
       supportsReasoningEffort: false,
       ...(existing.compat || {}),
     },
-    models: hasModel ? existingModels : [...existingModels, { id: model }],
+    models: upsertModelEntry(existing.models, model, limits),
+  };
+} else if (provider && model && (contextWindow || maxTokens)) {
+  const existing = models.providers[provider] || {};
+  const existingOverrides = existing.modelOverrides || {};
+  models.providers[provider] = {
+    ...existing,
+    modelOverrides: {
+      ...existingOverrides,
+      [model]: {
+        ...(existingOverrides[model] || {}),
+        ...modelLimits(),
+      },
+    },
   };
 }
 
 writeJson(modelsFile, models);
-

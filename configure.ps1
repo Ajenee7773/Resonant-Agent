@@ -36,6 +36,18 @@ function Prompt-Default($Label, $Default) {
   return $Default
 }
 
+function Prompt-NumberDefault($Label, $Default) {
+  while ($true) {
+    $value = Prompt-Default $Label $Default
+    $clean = $value.Replace(",", "").Trim()
+    $parsed = 0
+    if ([int]::TryParse($clean, [ref]$parsed) -and $parsed -gt 0) {
+      return $parsed.ToString()
+    }
+    Write-Host "Enter a positive whole number, for example 1000000."
+  }
+}
+
 Write-Host "RESONANT Agent configuration"
 Write-Host "Model mode:"
 Write-Host "  1. Ollama local"
@@ -70,6 +82,8 @@ if ($modelChoice -eq "1") {
   $env:RESONANT_API_KEY = Read-Host "API key"
 }
 
+$env:RESONANT_CONTEXT_WINDOW = Prompt-NumberDefault "Context window tokens" "1000000"
+$env:RESONANT_MAX_TOKENS = Prompt-NumberDefault "Max output tokens" "16384"
 $env:RESONANT_OPERATOR_NAME = Prompt-Default "Operator name" "Operator"
 $env:RESONANT_AGENT_NAME = Prompt-Default "Agent name" "Resonant"
 $env:RESONANT_MISSION = Prompt-Default "Mission" "Help the operator think, build, create, and act with clarity."

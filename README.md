@@ -94,6 +94,23 @@ If you choose cloud provider, enter:
 - model name
 - API key
 
+### Context Window
+
+Configuration also asks:
+
+```text
+Context window tokens [1000000]
+Max output tokens [16384]
+```
+
+Enter the real limits for the model you are using. For 1M-token DeepSeek/Ollama-style models, use:
+
+```text
+1000000
+```
+
+Pi defaults unknown custom models to `128000` context tokens if this is not set, so RESONANT writes the value into `~/.resonant/agent/models.json` during configuration.
+
 ### Operator Name
 
 This is your name. The agent uses it to know who it is working with.
