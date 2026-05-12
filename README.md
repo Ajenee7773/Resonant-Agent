@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/resonant-agent-logo.png" alt="RESONANT Agent logo" width="360">
+</p>
+
 # RESONANT Agent
 
 **Website:** [aware-nirvana-rwmb.here.now](https://aware-nirvana-rwmb.here.now/)
