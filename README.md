@@ -171,6 +171,22 @@ Windows PowerShell:
 & "$env:USERPROFILE\.resonant\bin\resonant.ps1"
 ```
 
+If you see an error like `.\start.ps1 is not recognized`, you are probably not inside the `Resonant-Agent` folder.
+
+Relaunch from anywhere:
+
+macOS/Linux:
+
+```bash
+cd ~/Resonant-Agent && ./start.sh
+```
+
+Windows PowerShell:
+
+```powershell
+cd "$env:USERPROFILE\Resonant-Agent"; .\start.ps1
+```
+
 ## Launch The UI
 
 RESONANT includes a simple local web UI.
