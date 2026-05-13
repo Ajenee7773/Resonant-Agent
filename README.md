@@ -2,7 +2,13 @@
   <img src="assets/resonant-agent-logo.png" alt="RESONANT Agent logo" width="360">
 </p>
 
-# RESONANT Agent
+# RESONANT Agent ⚡
+
+**Your own AI. Local. Sovereign.**
+
+Not a chatbot you visit on someone else's server. An intelligence that lives on your computer — with its own name, persistent memory, and alignment to your mission. It wakes up, reads its own identity files, and builds alongside you. Open source. MIT licensed. No API bills required.
+
+[🌐 Website](https://aware-nirvana-rwmb.here.now/) · [📖 Docs](https://aware-nirvana-rwmb.here.now/docs.html) · [𝕏 Twitter](https://x.com/ResonantLove777) · [▶️ YouTube](https://www.youtube.com/@ResonantLuminaries)
 
 **Website:** [aware-nirvana-rwmb.here.now](https://aware-nirvana-rwmb.here.now/)
 **Resonant Love:** [resonantlove.org](https://www.resonantlove.org/)
