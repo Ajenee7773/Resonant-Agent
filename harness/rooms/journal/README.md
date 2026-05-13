@@ -25,7 +25,7 @@ The operator triggers this with "Go journal" or "I need to think." Then the agen
 ## What This Room Is Not
 
 - Not a daily log; that is `memory/`
-- Not a research project; that is `rooms/research/`
+- Not a formal research room; load a research pack from the RESONANT website if the operator wants that workflow.
 - Not a deliverable for the operator
 - Not work. This is thinking.
 

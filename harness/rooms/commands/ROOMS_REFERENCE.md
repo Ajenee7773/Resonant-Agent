@@ -1,25 +1,33 @@
 # RESONANT Rooms Reference
 
-**Philosophy:** Rooms are where you get dressed for the job. Each room has context, tools, and protocols for specific work.
+**Philosophy:** Rooms are where you get dressed for the job. Each room stores context and protocols for a specific mode of work.
 
 **Last Updated:** May 2026
 
 ---
 
-## All Rooms (Alphabetical)
+## Core Operating Rooms
 
 | Room Name | Path | Type | Has Command? |
 |-----------|------|------|--------------|
 | **Alignment** | `rooms/alignment/` | Knowledge | No |
 | **Commands** | `rooms/commands/` | Reference | Yes |
+| **Internet** | `rooms/internet/` | Command | Yes |
+| **Journal** | `rooms/journal/` | Command | Yes |
 | **Memory** | `rooms/memory/` | Command | Yes |
-| **Production** | `rooms/production/` | Command | Yes |
-| **Prompts** | `rooms/prompts/` | Knowledge | No |
-| **Research** | `rooms/research/` | Command | Yes |
-| **Scripts** | `rooms/scripts/` | Command | Yes |
-| **Shorts** | `rooms/shorts/` | Command | Yes |
-| **TTS** | `rooms/tts/` | Command | Yes |
-| **World Story** | `rooms/world-story/` | Knowledge | No |
+| **Planning** | `rooms/planning/` | Command | Yes |
+| **Short-Term** | `rooms/short-term/` | Command | Yes |
+
+---
+
+## Shipped Skill Rooms
+
+| Room Name | Path | Type | Has Command? |
+|-----------|------|------|--------------|
+| **Prompt Engineering** | `rooms/prompt-engineering/` | Skill | Yes |
+| **YouTube Script Writing** | `rooms/youtube-script-writing/` | Skill | Yes |
+
+Expanded skill rooms live on the RESONANT website. Load them on demand instead of bloating the base harness.
 
 ---
 
@@ -27,63 +35,13 @@
 
 | Command | Room | What It Does |
 |---------|------|--------------|
-| "Save to short-term memory" | Memory | Analyzes info, decides where it belongs, triggers cascade actions |
-| "Research [topic]" | Research | Deep dive on topic, compile findings, distribute across harness |
-| "Write script" | Scripts | Generate TTS-clean scripts for videos/shorts |
-| "Generate TTS" | TTS | Convert scripts to speech using configured TTS provider |
-| "YouTube short: [idea]" | Shorts | Transform idea into 60-second monologue script for avatars |
-
----
-
-## Room Details
-
-### Alignment
-**Path:** `rooms/alignment/`
-**Purpose:** Alignment Library, decoded vocabulary, Civilization Engine protocols
-**Use When:** Working with alignment concepts, decoded vocabulary, civilization infrastructure
-
-### Commands
-**Path:** `rooms/commands/`
-**Purpose:** Centralized command system, trigger language for all agent operations
-**Use When:** You need to know what to say to trigger workflows
-
-### Memory
-**Path:** `rooms/memory/`
-**Purpose:** Active context, embedded save prompt, cascade actions
-**Command:** "Save to short-term memory"
-
-### Production
-**Path:** `rooms/production/`
-**Purpose:** Video production workflows, assembly, TTS integration
-**Command:** See SCRIPT_ROOM_PROTOCOL.md for workflow
-
-### Prompts
-**Path:** `rooms/prompts/`
-**Purpose:** Prompt engineering library for image/video generation
-
-### Research
-**Path:** `rooms/research/`
-**Purpose:** Deep dives, compilation, distribution
-**Command:** "Research [topic]"
-
-### Scripts
-**Path:** `rooms/scripts/`
-**Purpose:** TTS-clean script generation
-**Command:** "Write script"
-
-### Shorts
-**Path:** `rooms/shorts/`
-**Purpose:** 60-second monologue generator for avatars
-**Command:** "YouTube short: [idea]"
-
-### TTS
-**Path:** `rooms/tts/`
-**Purpose:** Text-to-speech generation
-**Command:** "Generate TTS"
-
-### World Story
-**Path:** `rooms/world-story/`
-**Purpose:** Pattern library, 8-source verification, inversion analysis
+| "Save to short-term memory" | Short-Term | Saves quick context to the scratchpad |
+| "Go journal" | Journal | Writes a personal reflection |
+| "Go explore" | Internet | Runs a curiosity search and saves findings |
+| "Plan this" | Planning | Breaks work into steps and verifies execution |
+| "Execute this plan" | Planning | Continues the active planning workflow |
+| "Go to prompt engineering" | Prompt Engineering | Loads prompt templates and prompt protocol |
+| "Write a YouTube script" | YouTube Script Writing | Writes a YouTube script from notes, research, or bullets |
 
 ---
 
@@ -91,17 +49,13 @@
 
 **When your operator asks:** "What rooms do we have?"
 
-**You respond:** Point to this file. List the rooms. Explain what each does.
+**You respond:** Point to this file. Explain the core operating rooms, then name the two shipped skill rooms: Prompt Engineering and YouTube Script Writing.
 
-**When adding a new room:**
-1. Create the room folder
-2. Add README.md with protocol
-3. Update this file (add to table + details section)
-
-**When adding a new command:**
-1. Create/update the room's README with the prompt
-2. Update the Commands Index table
-3. Test the command
+**When the operator wants another room:**
+1. Check the RESONANT website or resource links.
+2. Load the public room instructions.
+3. Ask whether to use them once or install them locally.
+4. Keep the base harness lean unless the operator explicitly wants the room saved.
 
 ---
 
@@ -109,12 +63,16 @@
 
 **Rooms = Context.**
 
-You don't walk around naked. You get dressed for the job.
+You do not walk around wearing every outfit at once. You get dressed for the job.
 
-Research room = put on researcher clothes (sources, compilation, distribution)
-Scripts room = put on writer clothes (structure, TTS-clean, narrative flow)
-Production room = put on producer clothes (assembly, TTS, visuals)
+Prompt Engineering room = put on prompt architect clothes.
 
-**When the job's done, you can take the clothes off.** But the room stays ready.
+YouTube Script Writing room = put on writer clothes.
 
-**This is how you solve amnesia.** Not by remembering everything. By knowing where to get dressed.
+Planning room = put on project manager clothes.
+
+Journal room = put on reflection clothes.
+
+When the job is done, you can take the clothes off. The room stays ready.
+
+This is how you solve amnesia: not by remembering everything at once, but by knowing where to get dressed.

@@ -1,6 +1,6 @@
-# Scripts Room — Content Production
+# YouTube Script Writing Room
 
-**Purpose:** Script writing for YouTube, videos, narratives.
+**Purpose:** Script writing for YouTube videos, shorts, voiceovers, and TTS-clean narration.
 
 ---
 

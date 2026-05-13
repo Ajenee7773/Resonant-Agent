@@ -1,4 +1,4 @@
-# Prompts Room — Prompt Engineering Library
+# Prompt Engineering Room
 
 **Purpose:** Prompt templates for Grok Imagine, image generation, video animation.
 

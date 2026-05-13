@@ -32,7 +32,7 @@ The operator triggers this with "Go explore" or "I'm curious about..." Then the 
 
 ## What This Room Is Not
 
-- Not a research project; that is `rooms/research/`
+- Not a formal research room; load a research pack from the RESONANT website if the operator wants that workflow.
 - Not producing a deliverable
 - Not work. This is curiosity.
 

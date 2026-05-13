@@ -237,9 +237,9 @@ and explain the available commands in plain language.
 
 ## Future Online Rooms
 
-The local harness includes the core rooms needed to boot, remember, work, and stay coherent offline.
+The local harness includes the core rooms needed to boot, remember, work, and stay coherent offline. It ships with two local skill rooms: **Prompt Engineering** and **YouTube Script Writing**.
 
-Future RESONANT rooms will also be hosted online as shared public rooms. That means the installed agent can stay lean while still being able to load expanded playbooks, research protocols, production rooms, platform guides, prompt libraries, and new skills from the RESONANT website when needed.
+Future RESONANT rooms will also be hosted online as shared public rooms. That means the installed agent can stay lean while still being able to load expanded playbooks, research protocols, production rooms, platform guides, prompt libraries, visibility rooms, and new skills from the RESONANT website when needed.
 
 Local rooms are the agent's home. Online rooms are the shared library.
 
@@ -658,13 +658,16 @@ harness/
   rooms/
     alignment/           ← Library of Alexandria, patterns, sensors
     commands/            ← Trigger language reference
-    production/          ← Video production craft + workflows
-    prompts/             ← Prompt engineering templates
-    research/            ← Research protocol + internet room
-    scripts/             ← Script writing craft + workflows
-    shorts/              ← YouTube Shorts protocol
-    tts/                 ← Text-to-speech and voice protocol
-    world-story/         ← Pattern library, 8-source verification
+    internet/            ← Curiosity searches and web exploration notes
+    journal/             ← Personal thought space
+    memory/              ← Memory protocol
+    planning/            ← Step-by-step planning workflow
+    prompt-engineering/  ← Prompt engineering templates
+    short-term/          ← Quick scratchpad memory
+    youtube-script-writing/ ← YouTube script craft + workflows
+  workspace/
+    input/               ← Operator/agent handoff input
+    output/              ← Clean output handoff folder
   extensions/            ← Runtime TypeScript extensions (drop-in)
   os-skill/              ← OS environment skill
   skills/                ← Agent skills

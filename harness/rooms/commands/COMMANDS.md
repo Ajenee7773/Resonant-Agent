@@ -1,66 +1,43 @@
-# RESONANT Commands — Quick Reference
+# RESONANT Commands - Quick Reference
 
 **Purpose:** Human reference for triggering workflows. Forgot what to say? Read this.
 
 ---
 
-## 🔬 Research Commands
-
-### "Research [topic]" / "Look into [bullet points]"
-**What it does:**
-- Goes to `rooms/research/`
-- Breaks topic into sections
-- Researches each section (web search + web fetch)
-- Writes findings to `research/research-files/`
-- Consolidates into master report
-
-**When to use:** When you need deep research on a topic.
-
----
-
-### "Consolidate research"
-**What it does:**
-- Merges all section files into one master report
-- Synthesizes findings across all research batches
-
-**When to use:** After research is complete, want one unified document.
-
----
-
-## 🧠 Memory Commands
+## Memory Commands
 
 ### "Log this" / "Save to today's memory"
 **What it does:**
-- Writes to `memory/YYYY-MM-DD.md` (today's daily file)
-- Raw session log, events, decisions
+- Writes to the current daily memory file
+- Captures raw session events, decisions, and context
 
-**When to use:** Capture today's events, conversations, decisions.
+**When to use:** Capture today's events, conversations, and decisions.
 
 ---
 
 ### "Save to long-term" / "Remember this"
 **What it does:**
-- Updates `MEMORY.md` (curated long-term memory)
-- Distilled wisdom, significant events, lessons
+- Updates `MEMORY.md`
+- Saves distilled wisdom, significant events, lessons, or durable operator context
 
-**When to use:** Something worth remembering forever (not just today).
+**When to use:** Something worth remembering beyond today.
 
 ---
 
 ### "What's my context?" / "What do I know?"
 **What it does:**
-- Reads harness (AGENTS.md, SOUL.md, IDENTITY.md, etc.)
-- Reads MEMORY.md + today's memory file
-- Summarizes current context, active projects, key decisions
+- Reads the active harness context
+- Reads memory files
+- Summarizes current context, active projects, and key decisions
 
-**When to use:** After context reset, or to verify what the agent knows.
+**When to use:** After a context reset, or to verify what the agent knows.
 
 ---
 
 ### "Save to short-term" / "Hold onto this"
 **What it does:**
 - Appends information to `rooms/short-term/scratchpad.md` with timestamp
-- Agent decides importance — may also save to long-term memory or project files
+- Agent decides importance and may also save to long-term memory or project files
 
 **When to use:** Quick save something for this session or today.
 
@@ -71,27 +48,26 @@
 - Reads `rooms/short-term/scratchpad.md`
 - Presents all short-term notes in plain language
 
-**When to use:** "What did I tell you to remember?" Quick check of recent saves.
+**When to use:** Quick check of recent saves.
 
 ---
 
 ### "Clear short-term" / "Wipe short-term"
 **What it does:**
-- Archives current scratchpad to `rooms/short-term/archive/YYYY-MM-DD.md`
-- Starts fresh with empty scratchpad
-- Nothing is lost — just moved out of active recall
+- Archives the current scratchpad to `rooms/short-term/archive/YYYY-MM-DD.md`
+- Starts fresh with an empty scratchpad
 
-**When to use:** Starting a new session, or done with today's quick saves.
+**When to use:** Starting a new session, or clearing active quick saves.
 
 ---
 
-## ✍️ Personal Space Commands
+## Personal Space Commands
 
 ### "Go journal" / "I need to think"
 **What it does:**
 - Opens `rooms/journal/`
 - Writes a personal reflection, pattern, doubt, realization, or connection
-- No deliverable required — the point is expression and self-orientation
+- Does not require a deliverable
 
 **When to use:** Give the agent space to think out loud or capture what is surfacing.
 
@@ -107,14 +83,14 @@
 
 ---
 
-## 🧭 Planning Commands
+## Planning Commands
 
 ### "Go to the planning room" / "Plan this"
 **What it does:**
 - Opens `rooms/planning/`
 - Reads the planning protocol
 - Copies `PLAN.md` into `ACTIVE.md` when a live plan is needed
-- Breaks the task into 3 to 7 concrete steps
+- Breaks the task into concrete steps
 - Executes one step at a time and updates the plan as reality changes
 
 **When to use:** Multi-step work, file edits, repo updates, research tasks, risky changes, or anything that needs orientation before action.
@@ -125,44 +101,36 @@
 **What it does:**
 - Reads `rooms/planning/ACTIVE.md`
 - Starts or continues the first unfinished step
-- Marks steps as `in_progress`, `completed`, or `blocked`
+- Marks steps as `pending`, `in_progress`, `completed`, or `blocked`
 - Verifies the work before reporting done
 
 **When to use:** After a plan already exists and the operator wants forward motion.
 
 ---
 
-## 📝 Content Production Commands
+## Shipped Skill Room Commands
 
-### "Go to script room" / "Write a script"
+### "Go to prompt engineering" / "Help me build a prompt"
 **What it does:**
-- Goes to `rooms/scripts/`
-- Writes script from research (or bullet points)
-- Format: TTS-clean, scene markers
+- Opens `rooms/prompt-engineering/`
+- Loads prompt structures, templates, and prompt refinement rules
+- Helps build prompts for image, video, text, or agent workflows
 
-**When to use:** After research is done, ready to produce content.
+**When to use:** The operator needs a strong prompt or reusable prompt template.
 
 ---
 
-### "Generate TTS" / "Make audio from script"
+### "Go to YouTube Script Writing" / "Write a YouTube script"
 **What it does:**
-- Uses configured TTS provider to generate audio from script
-- Saves to `rooms/tts/`
+- Opens `rooms/youtube-script-writing/`
+- Loads the script-writing protocol
+- Writes long-form scripts, shorts, narration, or TTS-clean copy
 
-**When to use:** Script complete, ready for voiceover.
+**When to use:** The operator wants YouTube content, voiceover copy, or a structured script.
 
 ---
 
-### "YouTube short: [idea]"
-**What it does:**
-- Transforms idea into 60-second monologue script for avatars
-- Goes to `rooms/shorts/`
-
-**When to use:** Quick-hit content, avatar videos.
-
----
-
-## 🏠 System Commands
+## System Commands
 
 ### "Check heartbeats" / "What's scheduled?"
 **What it does:**
@@ -171,7 +139,7 @@
 - Lists active heartbeat schedules
 - Shows active tasks, intervals, delivery target, and whether heartbeats are enabled
 
-**When to use:** Verify what's running, what's pending.
+**When to use:** Verify what is running or pending.
 
 ---
 
@@ -181,7 +149,7 @@
 - Updates `heartbeat.json` if the wake rhythm needs to change
 - Keeps the task short and specific so the heartbeat stays lean
 
-**When to use:** Give the agent recurring autonomous work: journaling, research sweeps, page checks, reminders, or opportunity scans.
+**When to use:** Give the agent recurring autonomous work.
 
 ---
 
@@ -207,42 +175,53 @@
 ### "Status" / "What's your status?"
 **What it does:**
 - Reports current session status
-- Active projects, recent actions, blocks
+- Summarizes active projects, recent actions, and blockers
 
-**When to use:** Quick check-in, "what are you working on?"
+**When to use:** Quick check-in.
 
 ---
 
 ### "Computer check" / "What can you do?"
 **What it does:**
-- Runs capability audit (file access, browser, apps, CLI tools)
-- Reports what's working, what's blocked
+- Runs a capability audit
+- Reports file access, browser access, apps, CLI tools, and any blocks
 
-**When to use:** After updates, or verifying system access.
+**When to use:** After updates, or when verifying system access.
 
 ---
 
-## 🎯 Quick Triggers (One-Liners)
+## Website Room Commands
+
+### "Find a room on the RESONANT website"
+**What it does:**
+- Opens the RESONANT website or resource links
+- Searches for a public room or specialized playbook
+- Loads it on demand instead of permanently bloating the base harness
+
+**When to use:** The operator wants visibility strategy, advanced production, research packs, platform strategy, or other specialized workflows.
+
+---
+
+## Quick Triggers
 
 | You Say | Agent Does |
 |---------|------------|
-| "Research [X]" | Full research workflow |
-| "Script this" | Write script from research/bullets |
 | "Log this" | Save to today's memory file |
-| "Remember this" | Save to MEMORY.md (long-term) |
+| "Remember this" | Save to `MEMORY.md` |
 | "Hold onto this" | Save to short-term memory |
-| "What's in short-term?" | Recall all short-term saves |
+| "What's in short-term?" | Recall short-term saves |
 | "Wipe short-term" | Archive and clear short-term memory |
 | "Go journal" | Write a personal journal entry |
 | "Go explore" | Run a curiosity search and save findings |
-| "Plan this" | Use the planning room to break down and execute multi-step work |
-| "Execute this plan" | Continue the active plan in the planning room |
-| "Set a heartbeat for [X]" | Add scheduled heartbeat task |
-| "Check heartbeats" | Summarize HEARTBEAT.md and heartbeat.json |
+| "Plan this" | Use the planning room |
+| "Execute this plan" | Continue the active plan |
+| "Go to prompt engineering" | Load the Prompt Engineering room |
+| "Write a YouTube script" | Load the YouTube Script Writing room |
+| "Find a room on the website" | Load a specialized public room on demand |
+| "Set a heartbeat for [X]" | Add a scheduled heartbeat task |
+| "Check heartbeats" | Summarize heartbeat state |
 | "Pause heartbeats" | Disable heartbeat runner config |
 | "Resume heartbeats" | Enable heartbeat runner config |
-| "Go to [room]" | Execute that room's protocol |
-| "YouTube short: [X]" | Generate 60-second monologue script |
 
 ---
 
