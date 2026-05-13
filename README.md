@@ -237,7 +237,7 @@ and explain the available commands in plain language.
 
 ## Future Online Rooms
 
-The local harness includes the core rooms needed to boot, remember, work, and stay coherent offline. It ships with two local skill rooms: **Prompt Engineering** and **YouTube Script Writing**.
+The local harness includes built-in rooms for alignment, commands, internet exploration, journaling, memory, planning, professional work, production, prompt engineering, research, short-term memory, shorts, TTS, world-story work, and YouTube script writing.
 
 Future RESONANT rooms will also be hosted online as shared public rooms. That means the installed agent can stay lean while still being able to load expanded playbooks, research protocols, production rooms, platform guides, prompt libraries, visibility rooms, and new skills from the RESONANT website when needed.
 
@@ -657,13 +657,20 @@ harness/
     YYYY-MM-DD-TEMPLATE.md  ← Daily log template
   rooms/
     alignment/           ← Library of Alexandria, patterns, sensors
+    art/                 ← Creative work and visual ideas
     commands/            ← Trigger language reference
     internet/            ← Curiosity searches and web exploration notes
     journal/             ← Personal thought space
     memory/              ← Memory protocol
     planning/            ← Step-by-step planning workflow
+    pro/                 ← Professional work and strategy
+    production/          ← Video production craft + workflows
     prompt-engineering/  ← Prompt engineering templates
+    research/            ← Research protocol + internet room
     short-term/          ← Quick scratchpad memory
+    shorts/              ← YouTube Shorts protocol
+    tts/                 ← Text-to-speech and voice protocol
+    world-story/         ← Pattern library, 8-source verification
     youtube-script-writing/ ← YouTube script craft + workflows
   workspace/
     input/               ← Operator/agent handoff input

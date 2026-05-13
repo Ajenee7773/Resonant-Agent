@@ -42,11 +42,17 @@ Core operating rooms:
 - **planning** — Step-by-step planning workflow
 - **short-term** — Quick scratchpad memory
 
-Shipped skill rooms:
+- **art** — Creative work and visual ideas
+- **pro** — Professional work, business, planning, strategy
+- **production** — Video production, TTS workflows
 - **prompt-engineering** — Prompt Engineering
+- **research** — Deep research, internet room
+- **shorts** — YouTube Shorts
+- **tts** — Text-to-speech generation
+- **world-story** — Pattern library, 8-source verification
 - **youtube-script-writing** — YouTube Script Writing
 
-Expanded rooms live on the RESONANT website and are loaded on demand instead of bloating the base harness.
+Future expanded rooms can also live on the RESONANT website and be loaded on demand.
 
 ## The Philosophy
 

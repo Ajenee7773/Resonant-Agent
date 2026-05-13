@@ -1,27 +1,29 @@
 # Rooms
 
-Rooms are ordinary workspace folders that hold reusable context.
+Rooms are ordinary workspace folders.
 
-Use them to keep the installed harness lean while still giving the agent places to load expertise on demand.
+Use them to keep work separated without creating heavy project infrastructure.
 
-The base harness includes core operating rooms plus two shipped skill rooms.
+Default rooms:
 
-## Core Operating Rooms
-
-- `alignment`: core alignment library and foundational reference.
-- `commands`: command reference and trigger language.
+- `alignment`: Library of Alexandria, decoded vocabulary.
+- `art`: creative work, music, visual ideas, style exploration.
+- `commands`: trigger language, command reference.
 - `internet`: curiosity searches and web exploration notes.
-- `journal`: personal thought space and reflection.
-- `memory`: memory protocol and active context handling.
-- `planning`: multi-step planning, execution tracking, and verification.
+- `journal`: personal thought space.
+- `memory`: memory protocol.
+- `planning`: multi-step planning and verification.
+- `pro`: professional work, business, planning, strategy.
+- `production`: video production, TTS workflows.
+- `prompt-engineering`: prompt engineering templates.
+- `research`: deep research, notes, source analysis.
 - `short-term`: quick scratchpad memory.
+- `shorts`: YouTube Shorts, 60-second monologues.
+- `tts`: text-to-speech generation.
+- `world-story`: pattern library, 8-source verification.
+- `youtube-script-writing`: script writing craft and workflows.
 
-## Shipped Skill Rooms
-
-- `prompt-engineering`: prompt templates and prompt-building protocol.
-- `youtube-script-writing`: YouTube script structure and TTS-clean writing.
-
-Expanded rooms live on the RESONANT website and can be loaded or installed only when the operator asks.
+Create new rooms whenever a body of work deserves its own home.
 
 Recommended room pattern:
 

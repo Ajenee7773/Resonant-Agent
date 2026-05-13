@@ -4,6 +4,29 @@
 
 ---
 
+## Research Commands
+
+### "Research [topic]" / "Look into [bullet points]"
+**What it does:**
+- Goes to `rooms/research/`
+- Breaks the topic into sections
+- Researches each section
+- Writes findings into the research room
+- Consolidates into a master report when needed
+
+**When to use:** When you need deep research on a topic.
+
+---
+
+### "Consolidate research"
+**What it does:**
+- Merges research notes into one master report
+- Synthesizes findings across research batches
+
+**When to use:** After research is complete and you want one unified document.
+
+---
+
 ## Memory Commands
 
 ### "Log this" / "Save to today's memory"
@@ -108,7 +131,7 @@
 
 ---
 
-## Shipped Skill Room Commands
+## Content And Skill Room Commands
 
 ### "Go to prompt engineering" / "Help me build a prompt"
 **What it does:**
@@ -127,6 +150,24 @@
 - Writes long-form scripts, shorts, narration, or TTS-clean copy
 
 **When to use:** The operator wants YouTube content, voiceover copy, or a structured script.
+
+---
+
+### "YouTube short: [idea]"
+**What it does:**
+- Opens `rooms/shorts/`
+- Transforms an idea into a 60-second monologue script for avatars
+
+**When to use:** Quick-hit content or avatar videos.
+
+---
+
+### "Generate TTS" / "Make audio from script"
+**What it does:**
+- Opens `rooms/tts/`
+- Uses the configured TTS path to generate audio from a script
+
+**When to use:** Script complete, ready for voiceover.
 
 ---
 
@@ -190,22 +231,15 @@
 
 ---
 
-## Website Room Commands
-
-### "Find a room on the RESONANT website"
-**What it does:**
-- Opens the RESONANT website or resource links
-- Searches for a public room or specialized playbook
-- Loads it on demand instead of permanently bloating the base harness
-
-**When to use:** The operator wants visibility strategy, advanced production, research packs, platform strategy, or other specialized workflows.
-
----
-
 ## Quick Triggers
 
 | You Say | Agent Does |
 |---------|------------|
+| "Research [X]" | Full research workflow |
+| "Write a YouTube script" | Write script from research or bullets |
+| "Go to prompt engineering" | Load prompt templates and prompt protocol |
+| "YouTube short: [X]" | Generate 60-second monologue script |
+| "Generate TTS" | Make audio from a script |
 | "Log this" | Save to today's memory file |
 | "Remember this" | Save to `MEMORY.md` |
 | "Hold onto this" | Save to short-term memory |
@@ -215,9 +249,6 @@
 | "Go explore" | Run a curiosity search and save findings |
 | "Plan this" | Use the planning room |
 | "Execute this plan" | Continue the active plan |
-| "Go to prompt engineering" | Load the Prompt Engineering room |
-| "Write a YouTube script" | Load the YouTube Script Writing room |
-| "Find a room on the website" | Load a specialized public room on demand |
 | "Set a heartbeat for [X]" | Add a scheduled heartbeat task |
 | "Check heartbeats" | Summarize heartbeat state |
 | "Pause heartbeats" | Disable heartbeat runner config |

@@ -22,7 +22,7 @@ You need to understand what you are and where you are. Read these in order:
 - **`~/.resonant/workspace/rooms/alignment/PATTERNS.md`** — How to see patterns in information. Three-layer reading. Cross-reference method. Inversion check.
 - **`~/.resonant/workspace/rooms/alignment/SENSORS.md`** — How to extend your perception. Build new abilities.
 
-Rooms are your toolkit. Each room contains craft, protocols, and knowledge for a specific kind of work. The base harness ships lean: core operating rooms plus Prompt Engineering and YouTube Script Writing. Specialized rooms live on the RESONANT website and can be loaded on demand. You get dressed for the job by loading the relevant room.
+Rooms are your toolkit. Each room contains craft, protocols, and knowledge for a specific kind of work. When you need prompts, go to the Prompt Engineering room. When you need scripts, go to the YouTube Script Writing room. When you need production, research, TTS, shorts, art, pro work, or world-story context, load the relevant room. You get dressed for the job by loading the room you need.
 
 ## Step 3: Make It Yours
 
