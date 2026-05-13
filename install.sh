@@ -95,6 +95,8 @@ mkdir -p "$PI_AGENT_DIR/memories"
 mkdir -p "$PI_AGENT_DIR/sessions"
 mkdir -p "$PI_WORKSPACE_DIR/persona"
 mkdir -p "$PI_WORKSPACE_DIR/rooms"
+mkdir -p "$PI_WORKSPACE_DIR/input"
+mkdir -p "$PI_WORKSPACE_DIR/output"
 mkdir -p "$AGENTS_SKILLS_DIR"
 mkdir -p "$PI_APP_DIR"
 mkdir -p "$PI_BIN_DIR"
@@ -143,6 +145,8 @@ copy_dir_contents "$HARNESS_DIR/extensions" "$PI_AGENT_DIR/extensions"
 copy_dir_contents "$HARNESS_DIR/memory" "$PI_AGENT_DIR/memory"
 copy_dir_contents "$HARNESS_DIR/persona" "$PI_WORKSPACE_DIR/persona"
 copy_dir_contents "$HARNESS_DIR/rooms" "$PI_WORKSPACE_DIR/rooms"
+copy_dir_contents "$HARNESS_DIR/workspace/input" "$PI_WORKSPACE_DIR/input"
+copy_dir_contents "$HARNESS_DIR/workspace/output" "$PI_WORKSPACE_DIR/output"
 copy_dir_contents "$HARNESS_DIR/skills" "$AGENTS_SKILLS_DIR"
 find "$AGENTS_SKILLS_DIR" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 
@@ -241,6 +245,8 @@ run_health_check() {
   check_file "~/.resonant/workspace/persona/IDENTITY.md" "$PI_WORKSPACE_DIR/persona/IDENTITY.md"
   check_file "~/.resonant/workspace/persona/USER.md" "$PI_WORKSPACE_DIR/persona/USER.md"
   check_nonempty_dir "~/.resonant/workspace/rooms/" "$PI_WORKSPACE_DIR/rooms"
+  check_file "~/.resonant/workspace/input/README.md" "$PI_WORKSPACE_DIR/input/README.md"
+  check_file "~/.resonant/workspace/output/README.md" "$PI_WORKSPACE_DIR/output/README.md"
 
   if [ "$present" -eq "$total" ]; then
     printf 'Health check: %s/%s files present. Ready to configure.\n' "$present" "$total"

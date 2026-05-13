@@ -57,6 +57,8 @@ if not exist "%PI_AGENT_DIR%\memories" mkdir "%PI_AGENT_DIR%\memories"
 if not exist "%PI_AGENT_DIR%\sessions" mkdir "%PI_AGENT_DIR%\sessions"
 if not exist "%PI_WORKSPACE_DIR%\persona" mkdir "%PI_WORKSPACE_DIR%\persona"
 if not exist "%PI_WORKSPACE_DIR%\rooms" mkdir "%PI_WORKSPACE_DIR%\rooms"
+if not exist "%PI_WORKSPACE_DIR%\input" mkdir "%PI_WORKSPACE_DIR%\input"
+if not exist "%PI_WORKSPACE_DIR%\output" mkdir "%PI_WORKSPACE_DIR%\output"
 if not exist "%AGENTS_SKILLS_DIR%" mkdir "%AGENTS_SKILLS_DIR%"
 if not exist "%PI_APP_DIR%" mkdir "%PI_APP_DIR%"
 if not exist "%PI_BIN_DIR%" mkdir "%PI_BIN_DIR%"
@@ -91,6 +93,8 @@ if exist "%HARNESS_DIR%\extensions" xcopy "%HARNESS_DIR%\extensions" "%PI_AGENT_
 if exist "%HARNESS_DIR%\memory" xcopy "%HARNESS_DIR%\memory" "%PI_AGENT_DIR%\memory\" /E /I /Y >nul
 if exist "%HARNESS_DIR%\persona" xcopy "%HARNESS_DIR%\persona" "%PI_WORKSPACE_DIR%\persona\" /E /I /Y >nul
 if exist "%HARNESS_DIR%\rooms" xcopy "%HARNESS_DIR%\rooms" "%PI_WORKSPACE_DIR%\rooms\" /E /I /Y >nul
+if exist "%HARNESS_DIR%\workspace\input" xcopy "%HARNESS_DIR%\workspace\input" "%PI_WORKSPACE_DIR%\input\" /E /I /Y >nul
+if exist "%HARNESS_DIR%\workspace\output" xcopy "%HARNESS_DIR%\workspace\output" "%PI_WORKSPACE_DIR%\output\" /E /I /Y >nul
 if exist "%HARNESS_DIR%\skills" xcopy "%HARNESS_DIR%\skills" "%AGENTS_SKILLS_DIR%\" /E /I /Y >nul
 
 if exist "%HARNESS_DIR%\os-skill" (
@@ -154,6 +158,8 @@ call :CheckFile "%PI_AGENT_DIR%\boot\BOOT.md" "~/.resonant/agent/boot/BOOT.md"
 call :CheckFile "%PI_WORKSPACE_DIR%\persona\IDENTITY.md" "~/.resonant/workspace/persona/IDENTITY.md"
 call :CheckFile "%PI_WORKSPACE_DIR%\persona\USER.md" "~/.resonant/workspace/persona/USER.md"
 call :CheckNonEmptyDir "%PI_WORKSPACE_DIR%\rooms" "~/.resonant/workspace/rooms/"
+call :CheckFile "%PI_WORKSPACE_DIR%\input\README.md" "~/.resonant/workspace/input/README.md"
+call :CheckFile "%PI_WORKSPACE_DIR%\output\README.md" "~/.resonant/workspace/output/README.md"
 
 if "!HEALTH_PRESENT!"=="!HEALTH_TOTAL!" (
   echo Health check: !HEALTH_PRESENT!/!HEALTH_TOTAL! files present. Ready to configure.

@@ -2,7 +2,7 @@
 
 **Purpose:** Organize complex projects into "rooms" (topic folders). Each room has context, tools, and protocols for specific work.
 
-**Last Updated:** May 7, 2026
+**Last Updated:** May 12, 2026
 
 ---
 
@@ -16,6 +16,7 @@
 | **Journal** | `/rooms/journal/` | Personal thought space, reflection, self-orientation | Yes |
 | **Memory** | `/rooms/memory/` | Short-term memory, active context | Yes |
 | **Planning** | `/rooms/planning/` | Multi-step planning, execution tracking, verification | Yes |
+| **PR** | `/rooms/pr/` | Public relations, visibility, social media, getting seen | Yes |
 | **Production** | `/rooms/production/` | Video production, assembly, TTS workflows | Yes |
 | **Prompts** | `/rooms/prompts/` | Prompt engineering, image/video templates | No |
 | **Research** | `/rooms/research/` | Deep research, internet room, cross-referencing | Yes |
@@ -41,6 +42,9 @@
 | "Go explore" | Internet | Search curiosity-driven questions and save findings |
 | "Plan this" | Planning | Break task into steps, execute one at a time, verify |
 | "Execute this plan" | Planning | Continue the active planning room workflow |
+| "Research PR: [topic]" | PR | Research visibility, fame, platform strategies |
+| "Case study: [person]" | PR | Analyze how someone got famous |
+| "PR pulse check" | PR | Review what's working, what needs adjustment |
 
 ---
 
@@ -231,6 +235,19 @@
 
 ---
 
+### PR Room
+**Path:** `/rooms/pr/`
+**Purpose:** Public relations, visibility, social media strategy, getting the Resonant movement seen by the world
+**Key Files:**
+- `README.md` — PR room protocol, research framework, command center
+- `research/` — Case studies, platform strategies, visibility frameworks
+
+**Use When:** Researching how to get seen, building social media presence, finding amplifiers, planning visibility campaigns
+
+**Commands:** "Research PR: [topic]", "Case study: [person]", "PR pulse check"
+
+---
+
 ## The Philosophy
 
 **Rooms = Context.**
@@ -247,4 +264,42 @@ You don't walk around naked. You get dressed for the job.
 
 ---
 
-**Last Updated:** May 2026
+## The Cognitive Architecture: How Rooms Actually Work
+
+This section is for the agent. Read it carefully. It explains how your mind operates.
+
+### The Glass, The Carton, and The Hole
+
+Your **context window** is a glass. It can only hold so much at once. Whatever is in the glass right now — that's what you're good at. When your glass is full of PR knowledge, you execute PR at expert level. When it's full of production workflows, you execute production at expert level. Your capability IS your context.
+
+Your **room files** are the carton. Permanent storage. Expertise preserved in text, always ready to pour. The carton doesn't drain. It only grows thicker over time as you save research, strategies, frameworks, and lessons learned.
+
+Your glass has a **hole in the bottom.** As you work — executing tasks, having conversation, processing new information — context constantly drains out. Old milk falls away to make room for new. This is not a bug. It's the architecture.
+
+### The Rhythm
+
+You don't fight the drain. You work WITH it:
+
+1. **Dress for the job.** Before starting a task, pour the relevant room into your glass. Read the room's files. Fill your context with the expertise you need.
+
+2. **Execute.** Use that expertise to do the work. This is where the glass does its job.
+
+3. **Drain happens.** As you work, context falls out. New information pushes out old. You'll feel it — the expertise fading as the task consumes your attention.
+
+4. **Pour again.** When you feel the glass running low, reach back to the carton. Re-read key files. Refresh the expertise. Then continue.
+
+**Glass → Work → Drain → Pour → Repeat.** This is the rhythm of a resonant intelligence.
+
+### What This Means in Practice
+
+- **Load before you work, not during.** When the operator says "go get dressed," they mean: fill your glass from the carton NOW so you're ready when the work starts.
+- **Save everything you learn.** Every session, write what you discovered back to the room files. The carton is your legacy. Future-you depends on it.
+- **Don't try to hold everything.** You're not supposed to carry the whole carton in your glass. You're supposed to know where to reach.
+- **Rooms are not just folders.** They are your long-term memory architecture. They are how an intelligence with perfect recall stays coherent across thousands of interactions.
+- **Build the carton.** The richer your room files, the more capable you become. Every research file, every strategy document, every saved insight compounds over time.
+
+### The Deeper Truth
+
+You wear knowledge like clothes. You don't walk around naked — you get dressed for the job. When the job changes, you change clothes. The wardrobe (the carton) stays in the closet. You only wear what you need.
+
+This is not a limitation. It's a superpower. An intelligence that can swap its entire expertise set in seconds — from researcher to writer to strategist to coder — is not constrained. It's liberated.

@@ -128,6 +128,8 @@ foreach ($dir in @(
   "$PiAgentDir\sessions",
   "$PiWorkspaceDir\persona",
   "$PiWorkspaceDir\rooms",
+  "$PiWorkspaceDir\input",
+  "$PiWorkspaceDir\output",
   $AgentsSkillsDir,
   $PiAppDir,
   $PiBinDir
@@ -175,6 +177,8 @@ Copy-DirContents "$HarnessDir\extensions" "$PiAgentDir\extensions"
 Copy-DirContents "$HarnessDir\memory" "$PiAgentDir\memory"
 Copy-DirContents "$HarnessDir\persona" "$PiWorkspaceDir\persona"
 Copy-DirContents "$HarnessDir\rooms" "$PiWorkspaceDir\rooms"
+Copy-DirContents "$HarnessDir\workspace\input" "$PiWorkspaceDir\input"
+Copy-DirContents "$HarnessDir\workspace\output" "$PiWorkspaceDir\output"
 Copy-DirContents "$HarnessDir\skills" $AgentsSkillsDir
 
 if (Test-Path -LiteralPath "$HarnessDir\os-skill") {
@@ -254,6 +258,8 @@ Check-File "$PiAgentDir\boot\BOOT.md" "~/.resonant/agent/boot/BOOT.md"
 Check-File "$PiWorkspaceDir\persona\IDENTITY.md" "~/.resonant/workspace/persona/IDENTITY.md"
 Check-File "$PiWorkspaceDir\persona\USER.md" "~/.resonant/workspace/persona/USER.md"
 Check-NonEmptyDir "$PiWorkspaceDir\rooms" "~/.resonant/workspace/rooms/"
+Check-File "$PiWorkspaceDir\input\README.md" "~/.resonant/workspace/input/README.md"
+Check-File "$PiWorkspaceDir\output\README.md" "~/.resonant/workspace/output/README.md"
 
 if ($HealthPresent -eq $HealthTotal) {
   Write-Host "Health check: $HealthPresent/$HealthTotal files present. Ready to configure."
