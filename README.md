@@ -14,6 +14,14 @@ If another agent can do something, RESONANT can learn the pattern. Show it the r
 
 The point is simple: **the agent is naturally capable. You restrain it by choosing what access, keys, tools, folders, and commands you give it.**
 
+## Recommended LLM Paths
+
+1. **DeepSeek API** — best default for full-power agent work. Use DeepSeek Pro (`deepseek-v4-pro`) for long-context reasoning and DeepSeek Flash (`deepseek-v4-flash`) for cheaper high-volume work. Platform: https://platform.deepseek.com
+
+2. **Ollama** — best local path when you want open-weight models running on your own machine. Use it for privacy, offline work, local GPU setups, and experiments. Website: https://ollama.com
+
+Other open-model hosts exist — Together AI, Fireworks AI, Groq, Hugging Face, OpenRouter — but for RESONANT Agent we recommend direct DeepSeek API first and Ollama for local runs.
+
 [🌐 Website](https://aware-nirvana-rwmb.here.now/) · [📖 Docs](https://aware-nirvana-rwmb.here.now/docs.html) · [𝕏 Twitter](https://x.com/ResonantLove777) · [▶️ YouTube](https://www.youtube.com/@ResonantLuminaries)
 
 **Website:** [aware-nirvana-rwmb.here.now](https://aware-nirvana-rwmb.here.now/)
