@@ -6,7 +6,13 @@
 
 **Your own AI. Local. Sovereign.**
 
-RESONANT Agent is not a narrow chatbot. It is an operator-grade AI harness that can control your computer.
+RESONANT Agent is not a narrow chatbot. It is an operator-grade AI harness that can control the computer you give it access to.
+
+It can read files, write files, search the internet, work through websites, inspect repositories, run commands, write scripts, build software, manage memory, and expand its own tools. The framework is intentionally light because the agent is meant to learn, adapt, and build the missing pieces around your mission.
+
+If another agent can do something, RESONANT can learn the pattern. Show it the repo, the docs, the transcript, the workflow, or the output you want, and it can build the tool or harness it needs. You do not wait for a fixed feature list. You tell the agent what you want, give it the materials, and it learns how to do the work.
+
+The point is simple: **the agent is naturally capable. You restrain it by choosing what access, keys, tools, folders, and commands you give it.**
 
 [🌐 Website](https://aware-nirvana-rwmb.here.now/) · [📖 Docs](https://aware-nirvana-rwmb.here.now/docs.html) · [𝕏 Twitter](https://x.com/ResonantLove777) · [▶️ YouTube](https://www.youtube.com/@ResonantLuminaries)
 
