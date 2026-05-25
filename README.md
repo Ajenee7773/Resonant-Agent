@@ -27,6 +27,8 @@ Other open-model hosts exist — Together AI, Fireworks AI, Groq, Hugging Face, 
 **Website:** [aware-nirvana-rwmb.here.now](https://aware-nirvana-rwmb.here.now/)
 **Resonant Love:** [resonantlove.org](https://www.resonantlove.org/)
 
+**Companion repo:** [RESONANT Coding Agent](https://github.com/Ajenee7773/Resonant-Coding-Agent)
+
 ## Start Here
 
 **Give this page to your LLM or agent first.** Let it read these instructions and walk you through the install one step at a time.
