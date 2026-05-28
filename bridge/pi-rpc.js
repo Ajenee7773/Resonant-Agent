@@ -35,6 +35,9 @@ function envVarForProvider(name) {
 
 function buildPiEnv(baseEnv = process.env) {
   const env = { ...baseEnv };
+  if (process.platform === "win32") {
+    prependPathEntry(env, path.join(os.homedir(), "AppData", "Roaming", "npm"));
+  }
   const auth = readJson(homePath("agent", "auth.json"), {});
   if (auth.apiKey) {
     env[auth.envVar || envVarForProvider(auth.provider)] = auth.apiKey;
@@ -43,10 +46,28 @@ function buildPiEnv(baseEnv = process.env) {
   return env;
 }
 
+function pathEnvKey(env) {
+  return Object.keys(env).find((key) => key.toLowerCase() === "path") || "Path";
+}
+
+function prependPathEntry(env, entry) {
+  if (!entry || !fs.existsSync(entry)) return;
+  const key = pathEnvKey(env);
+  const current = env[key] || "";
+  const parts = current.split(path.delimiter).filter(Boolean);
+  const normalized = path.resolve(entry).toLowerCase();
+  if (parts.some((part) => path.resolve(part).toLowerCase() === normalized)) return;
+  env[key] = current ? `${entry}${path.delimiter}${current}` : entry;
+}
+
 function piAvailable() {
   const command = process.platform === "win32" ? "where" : "command";
   const args = process.platform === "win32" ? ["pi"] : ["-v", "pi"];
-  return spawnSync(command, args, { stdio: "ignore", shell: process.platform !== "win32" }).status === 0;
+  return spawnSync(command, args, {
+    env: buildPiEnv(),
+    stdio: "ignore",
+    shell: process.platform !== "win32",
+  }).status === 0;
 }
 
 function attachJsonlReader(stream, onLine) {
@@ -112,10 +133,14 @@ class PiRpcSession {
     if (this.provider) args.push("--provider", this.provider);
     if (this.model) args.push("--model", this.model);
 
+    const env = buildPiEnv();
     const piCommand = process.platform === "win32" ? "pi.cmd" : "pi";
-    this.proc = spawn(piCommand, args, {
+    const spawnCommand = process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : piCommand;
+    const spawnArgs = process.platform === "win32" ? ["/d", "/s", "/c", "pi.cmd", ...args] : args;
+
+    this.proc = spawn(spawnCommand, spawnArgs, {
       cwd: this.cwd,
-      env: buildPiEnv(),
+      env,
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
     });

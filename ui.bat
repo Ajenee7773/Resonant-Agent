@@ -7,6 +7,7 @@ if not "%RESONANT_HOME%"=="" (
   set "PI_HOME=%USERPROFILE%\.resonant"
 )
 set "PI_CODING_AGENT_DIR=%PI_HOME%\agent"
+if exist "%APPDATA%\npm" set "PATH=%APPDATA%\npm;%PATH%"
 
 where node >nul 2>nul
 if errorlevel 1 (
