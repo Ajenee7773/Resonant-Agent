@@ -75,11 +75,11 @@ log "RESONANT Agent installer"
 download_repo_if_needed
 log "Checking Node.js..."
 
-command -v node >/dev/null 2>&1 || die "Node.js is not installed. Install Node.js 18+ and run this again."
+command -v node >/dev/null 2>&1 || die "Node.js 18 or newer is required. Install it from https://nodejs.org/en/download and run this installer again."
 node -e "const major=Number(process.versions.node.split('.')[0]); if (major < 18) process.exit(1)" \
   || die "Node.js 18+ is required. Current version: $(node -v)"
 
-command -v npm >/dev/null 2>&1 || die "npm is not installed or not on PATH."
+command -v npm >/dev/null 2>&1 || die "npm was not found on PATH. Reinstall Node.js from https://nodejs.org/en/download and run this installer again."
 
 if command -v pi >/dev/null 2>&1 && [ "${RESONANT_FORCE_PI_INSTALL:-0}" != "1" ]; then
   log "Pi runtime already found on PATH; leaving the existing global install untouched."
@@ -101,6 +101,13 @@ mkdir -p "$AGENTS_SKILLS_DIR"
 mkdir -p "$PI_APP_DIR"
 mkdir -p "$PI_BIN_DIR"
 
+if [ -f "$PI_APP_DIR/package.json" ] &&
+   [ "${RESONANT_SKIP_PRE_UPGRADE_BACKUP:-0}" != "1" ]; then
+  log "Creating a safe pre-upgrade backup..."
+  node "$SCRIPT_DIR/scripts/create-pre-upgrade-backup.js" \
+    || die "The pre-upgrade backup failed. Existing application files were not replaced."
+fi
+
 log "Copying harness files..."
 
 if [ -f "$HARNESS_DIR/AGENTS.md" ]; then
@@ -108,7 +115,7 @@ if [ -f "$HARNESS_DIR/AGENTS.md" ]; then
   cp "$HARNESS_DIR/AGENTS.md" "$PI_AGENT_DIR/AGENTS.md"
 fi
 
-for f in SOUL.md CONSTITUTION.md FOUNDATION.md HEARTBEAT.md MEMORY.md TOOLS.md ROOMS.md TRANSFER.md; do
+for f in SOUL.md CONSTITUTION.md FOUNDATION.md HEARTBEAT.md MEMORY.md MY-HARNESS.md TOOLS.md ROOMS.md TRANSFER.md; do
   if [ -f "$HARNESS_DIR/$f" ]; then
     cp "$HARNESS_DIR/$f" "$PI_AGENT_DIR/$f"
   fi
@@ -158,12 +165,16 @@ fi
 
 log "Copying RESONANT Agent launchers..."
 copy_dir_contents "$SCRIPT_DIR/bridge" "$PI_APP_DIR/bridge"
+copy_dir_contents "$SCRIPT_DIR/core" "$PI_APP_DIR/core"
+copy_dir_contents "$SCRIPT_DIR/defaults" "$PI_APP_DIR/defaults"
+copy_dir_contents "$SCRIPT_DIR/interfaces" "$PI_APP_DIR/interfaces"
+copy_dir_contents "$SCRIPT_DIR/schemas" "$PI_APP_DIR/schemas"
 copy_dir_contents "$SCRIPT_DIR/scripts" "$PI_APP_DIR/scripts"
 copy_dir_contents "$SCRIPT_DIR/ui" "$PI_APP_DIR/ui"
 copy_dir_contents "$SCRIPT_DIR/heartbeat" "$PI_APP_DIR/heartbeat"
 copy_dir_contents "$SCRIPT_DIR/telegram" "$PI_APP_DIR/telegram"
 
-for f in install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh package.json README.md RELEASE.md; do
+for f in install.sh configure.sh start.sh ui.sh heartbeat-start.sh telegram-setup.sh telegram-start.sh telegram-disconnect.sh config.template.json package.json README.md RELEASE.md soul.json version.json; do
   if [ -f "$SCRIPT_DIR/$f" ]; then
     cp "$SCRIPT_DIR/$f" "$PI_APP_DIR/$f"
   fi

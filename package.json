@@ -1,15 +1,19 @@
 {
   "name": "resonant-agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "description": "RESONANT Agent harness, onboarding, and local surfaces built on the Pi runtime.",
   "scripts": {
+    "bootstrap": "node core/bootstrap.js",
     "ui": "node ui/server.js",
     "heartbeat": "node heartbeat/runner.js",
     "telegram:setup": "node telegram/setup.js",
     "telegram:start": "node telegram/bridge.js",
-    "check": "node --check bridge/pi-rpc.js && node --check ui/server.js && node --check telegram/setup.js && node --check telegram/bridge.js && node --check heartbeat/runner.js && node --check scripts/write-config.js && node --check scripts/auth-env.js && node --check scripts/merge-settings.js && node --check harness/skills/voice/scripts/speak.js"
+    "telegram:disconnect": "node telegram/disconnect.js",
+    "smoke:gemini": "node scripts/gemini-smoke.js",
+    "test": "node --test",
+    "check": "node --check core/paths.js && node --check core/json-store.js && node --check core/harness-manager.js && node --check core/entity.js && node --check core/onboarding.js && node --check core/conversations.js && node --check core/continuity.js && node --check core/instance-orientation.js && node --check core/living-libraries.js && node --check core/data-control.js && node --check core/harness-browser.js && node --check core/rooms.js && node --check core/http-security.js && node --check core/instance-lock.js && node --check core/provider-config.js && node --check core/runtime.js && node --check core/bootstrap.js && node --check bridge/pi-rpc.js && node --check ui/server.js && node --check telegram/setup.js && node --check telegram/state.js && node --check telegram/disconnect.js && node --check telegram/bridge.js && node --check heartbeat/runner.js && node --check scripts/create-pre-upgrade-backup.js && node --check scripts/gemini-smoke.js && node --check scripts/write-config.js && node --check scripts/auth-env.js && node --check scripts/merge-settings.js && node --check harness/skills/voice/scripts/speak.js"
   },
   "engines": {
     "node": ">=18"

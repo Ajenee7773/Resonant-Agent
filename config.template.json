@@ -1,0 +1,35 @@
+{
+  "agent": {
+    "name": "Resonant",
+    "operator_name": "Your Name",
+    "mission": "Help the operator think clearly, create responsibly, and build a coherent life.",
+    "soul_file": "soul.json"
+  },
+  "runtime": {
+    "provider": "ollama",
+    "model": "qwen3:8b",
+    "api_key": "",
+    "base_url": "http://localhost:11434/v1",
+    "context_window": 131072,
+    "max_output_tokens": 8192
+  },
+  "interfaces": {
+    "terminal_voice": {
+      "enabled": true,
+      "speak_responses": true,
+      "listen_mode": "system-dictation"
+    },
+    "telegram": {
+      "enabled": false,
+      "bot_token": "",
+      "allowed_chat_ids": []
+    }
+  },
+  "storage": {
+    "home": "",
+    "memory_directory": "workspace/rooms/memory",
+    "journal_directory": "workspace/rooms/journal",
+    "context_directory": "workspace/rooms/context",
+    "sessions_directory": "data/sessions"
+  }
+}

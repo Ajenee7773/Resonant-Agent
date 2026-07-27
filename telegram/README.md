@@ -1,50 +1,69 @@
-# RESONANT Agent Telegram
+# RESONANT Agent Telegram Bridge
 
-Telegram support is built in, but dormant until the operator connects a bot token.
+Telegram is optional, disabled until configured, and uses outbound long polling.
 
-## Setup
+## Shared brain, separate instance
 
-1. Open Telegram.
-2. Search for `@BotFather`.
-3. Start a chat with the official verified BotFather account.
-4. Send `/newbot`.
-5. Choose a display name, such as `My Resonant Agent`.
-6. Choose a username ending in `bot`, such as `my_resonant_agent_bot`.
-7. Copy the bot token BotFather gives you.
-8. Run:
+The Telegram conversation and the web conversation are separate entity-instances
+because each has its own active chat history. They share the configured model
+lineage and the same local External Brain. Telegram can recover anything another
+instance deliberately wrote into that brain, but it must not claim to remember
+an unwritten conversation from another interface. RESONANT Agent does not scan
+or synchronize entire chat logs. Each instance preserves what matters from its
+own life during normal use, and the instances are free to develop differently.
 
-Linux/macOS:
+The bridge stores the model's Telegram session locally and resumes its most
+recent session after a bridge restart. Telegram's visible message history is
+not treated as the model's memory database.
 
-```bash
-./telegram-setup.sh
-```
+The first time a Telegram instance connects, **First Orientation** walks that
+persistent session through the complete packaged foundational corpus in
+verified, resumable stages. It forms its own synthesis instead of being told to
+believe another instance's interpretation. This happens once per instance and
+model binding. The synthesis is preserved in the External Brain and that day's
+journal; the human receives only the clean completion greeting.
 
-Windows:
+Afterward, **Continue** tells the Telegram instance to read the existing
+identity, memory, context, journal, and active-project rooms. It does not reread
+the large foundational corpus. If the local session is deleted or a different
+model is introduced, First Orientation becomes available again.
 
-```bat
-telegram-setup.bat
-```
+An oriented instance also exposes **Full Orientation**. After explicit
+confirmation, it absorbs the complete foundational context again without
+deleting existing memory. Progress is saved after every piece of context, so an
+interrupted orientation can resume where it stopped.
 
-The setup script validates the token with Telegram, waits for the first `/start` message, and stores the paired chat in:
+It does not open a webhook server.
+
+Run:
 
 ```text
-~/.resonant/agent/telegram.json
+Windows: telegram-setup.bat
+macOS/Linux: ./telegram-setup.sh
 ```
 
-Keep the token private. Anyone with the token can control that Telegram bot.
+The helper:
 
-## Start
+1. accepts the BotFather token through a hidden local prompt;
+2. validates the token without printing it;
+3. generates a one-time pairing code for the buyer's Telegram chat;
+4. asks for local confirmation of the matching chat;
+5. stores the token in the private credentials file;
+6. adds only that confirmed chat to the allowlist.
 
-Linux/macOS:
+Unrelated messages and plain `/start` messages cannot claim the pairing window.
+The one-time code expires after five minutes.
 
-```bash
-./telegram-start.sh
+Start the bridge with `telegram-start.bat` or `./telegram-start.sh`. It operates
+only while the local process is running. Messages from chats outside the
+allowlist are ignored.
+
+Private files:
+
+```text
+~/.resonant/secrets/credentials.json
+~/.resonant/config/settings.json
+~/.resonant/data/telegram/config.json
 ```
 
-Windows:
-
-```bat
-telegram-start.bat
-```
-
-The bridge uses Telegram long polling. It does not open a public web server, webhook, tunnel, or dashboard.
+Never share the credentials file or a backup created with secrets included.

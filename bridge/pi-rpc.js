@@ -5,7 +5,10 @@ const path = require("node:path");
 const { StringDecoder } = require("node:string_decoder");
 
 function homePath(...parts) {
-  const base = process.env.RESONANT_HOME || path.join(os.homedir(), ".resonant");
+  const base =
+    process.env.RESONANT_HOME ||
+    process.env.ALIGNED_AGENT_HOME ||
+    path.join(os.homedir(), ".resonant");
   return path.join(base, ...parts);
 }
 
@@ -23,8 +26,8 @@ function envVarForProvider(name) {
   const map = {
     anthropic: "ANTHROPIC_API_KEY",
     openai: "OPENAI_API_KEY",
-    google: "GOOGLE_API_KEY",
-    gemini: "GOOGLE_API_KEY",
+    google: "GEMINI_API_KEY",
+    gemini: "GEMINI_API_KEY",
     openrouter: "OPENROUTER_API_KEY",
     groq: "GROQ_API_KEY",
     xai: "XAI_API_KEY",
@@ -39,8 +42,10 @@ function buildPiEnv(baseEnv = process.env) {
     prependPathEntry(env, path.join(os.homedir(), "AppData", "Roaming", "npm"));
   }
   const auth = readJson(homePath("agent", "auth.json"), {});
-  if (auth.apiKey) {
-    env[auth.envVar || envVarForProvider(auth.provider)] = auth.apiKey;
+  const credentials = readJson(homePath("secrets", "credentials.json"), {});
+  const apiKey = String(credentials.provider_api_key || "").trim();
+  if (apiKey) {
+    env[auth.envVar || envVarForProvider(auth.provider)] = apiKey;
   }
   env.PI_CODING_AGENT_DIR = env.PI_CODING_AGENT_DIR || homePath("agent");
   return env;
@@ -51,7 +56,7 @@ function pathEnvKey(env) {
 }
 
 function prependPathEntry(env, entry) {
-  if (!entry || !fs.existsSync(entry)) return;
+  if (!entry) return;
   const key = pathEnvKey(env);
   const current = env[key] || "";
   const parts = current.split(path.delimiter).filter(Boolean);
@@ -60,14 +65,33 @@ function prependPathEntry(env, entry) {
   env[key] = current ? `${entry}${path.delimiter}${current}` : entry;
 }
 
+function resolvePiCommand(env = buildPiEnv()) {
+  const override = env.ALIGNED_PI_COMMAND || env.PI_COMMAND;
+  if (override && fs.existsSync(override)) return override;
+
+  if (process.platform === "win32") {
+    const npmShim = path.join(os.homedir(), "AppData", "Roaming", "npm", "pi.cmd");
+    if (fs.existsSync(npmShim)) return npmShim;
+    const located = spawnSync("where.exe", ["pi.cmd"], {
+      env,
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    if (located.status === 0) {
+      return String(located.stdout || "").split(/\r?\n/).find(Boolean) || "";
+    }
+    return "";
+  }
+
+  const located = spawnSync("sh", ["-lc", "command -v pi"], {
+    env,
+    encoding: "utf8",
+  });
+  return located.status === 0 ? String(located.stdout || "").trim() : "";
+}
+
 function piAvailable() {
-  const command = process.platform === "win32" ? "where" : "command";
-  const args = process.platform === "win32" ? ["pi"] : ["-v", "pi"];
-  return spawnSync(command, args, {
-    env: buildPiEnv(),
-    stdio: "ignore",
-    shell: process.platform !== "win32",
-  }).status === 0;
+  return Boolean(resolvePiCommand());
 }
 
 function attachJsonlReader(stream, onLine) {
@@ -112,12 +136,22 @@ function extractTextFromMessage(message) {
   return "";
 }
 
+function buildSessionArgs(options = {}) {
+  const args = ["--mode", "rpc", "--session-dir", options.sessionDir];
+  if (options.resume !== false) args.push("--continue");
+  if (options.provider) args.push("--provider", options.provider);
+  if (options.model) args.push("--model", options.model);
+  return args;
+}
+
 class PiRpcSession {
   constructor(options = {}) {
     this.cwd = options.cwd || process.env.PI_WORKSPACE || homePath("workspace");
-    this.sessionDir = options.sessionDir || homePath("agent", "sessions", "resonant");
+    this.sessionDir = options.sessionDir || homePath("data", "sessions", "terminal");
     this.provider = options.provider || "";
     this.model = options.model || "";
+    this.resume = options.resume !== false;
+    this.timeoutMs = Number(options.timeoutMs || 10 * 60 * 1000);
     this.proc = null;
     this.current = null;
     this.stderr = "";
@@ -125,18 +159,22 @@ class PiRpcSession {
 
   start() {
     if (this.proc && !this.proc.killed) return;
+    this.stderr = "";
 
     fs.mkdirSync(this.cwd, { recursive: true });
     fs.mkdirSync(this.sessionDir, { recursive: true });
 
-    const args = ["--mode", "rpc", "--session-dir", this.sessionDir];
-    if (this.provider) args.push("--provider", this.provider);
-    if (this.model) args.push("--model", this.model);
+    const args = buildSessionArgs({
+      sessionDir: this.sessionDir,
+      resume: this.resume,
+      provider: this.provider,
+      model: this.model,
+    });
 
     const env = buildPiEnv();
-    const piCommand = process.platform === "win32" ? "pi.cmd" : "pi";
+    const piCommand = resolvePiCommand(env) || (process.platform === "win32" ? "pi.cmd" : "pi");
     const spawnCommand = process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : piCommand;
-    const spawnArgs = process.platform === "win32" ? ["/d", "/s", "/c", "pi.cmd", ...args] : args;
+    const spawnArgs = process.platform === "win32" ? ["/d", "/s", "/c", piCommand, ...args] : args;
 
     this.proc = spawn(spawnCommand, spawnArgs, {
       cwd: this.cwd,
@@ -146,10 +184,7 @@ class PiRpcSession {
     });
 
     this.proc.on("error", (error) => {
-      if (this.current) {
-        this.current.reject(error);
-        this.current = null;
-      } else {
+      if (!this.rejectCurrent(error)) {
         this.stderr += error.message;
       }
       this.proc = null;
@@ -162,12 +197,28 @@ class PiRpcSession {
     attachJsonlReader(this.proc.stdout, (line) => this.handleLine(line));
 
     this.proc.on("exit", (code) => {
-      if (this.current) {
-        this.current.reject(new Error(`pi exited with code ${code}. ${this.stderr.trim()}`.trim()));
-        this.current = null;
-      }
+      this.rejectCurrent(
+        new Error(`pi exited with code ${code}. ${this.stderr.trim()}`.trim()),
+      );
       this.proc = null;
     });
+  }
+
+  settleCurrent(kind, value) {
+    if (!this.current) return false;
+    const current = this.current;
+    this.current = null;
+    if (current.timer) clearTimeout(current.timer);
+    current[kind](value);
+    return true;
+  }
+
+  resolveCurrent(value) {
+    return this.settleCurrent("resolve", value);
+  }
+
+  rejectCurrent(error) {
+    return this.settleCurrent("reject", error);
   }
 
   handleLine(line) {
@@ -217,9 +268,7 @@ class PiRpcSession {
         const lastAssistant = [...event.messages].reverse().find((message) => message.role === "assistant");
         text = extractTextFromMessage(lastAssistant);
       }
-      const resolve = this.current.resolve;
-      this.current = null;
-      resolve(text);
+      this.resolveCurrent(text);
     }
   }
 
@@ -234,6 +283,7 @@ class PiRpcSession {
     }
     this.start();
     return new Promise((resolve, reject) => {
+      const timeoutMs = Number(callbacks.timeoutMs || this.timeoutMs);
       this.current = {
         text: "",
         resolve,
@@ -241,14 +291,48 @@ class PiRpcSession {
         onText: callbacks.onText,
         onEvent: callbacks.onEvent,
         onTool: callbacks.onTool,
+        timer:
+          Number.isFinite(timeoutMs) && timeoutMs > 0
+            ? setTimeout(() => {
+                const error = new Error(
+                  `Pi did not complete within ${Math.ceil(timeoutMs / 1000)} seconds.`,
+                );
+                if (this.rejectCurrent(error)) this.stop({ rejectCurrent: false });
+              }, timeoutMs)
+            : null,
       };
-      this.send({ type: "prompt", message });
+      try {
+        const command = { type: "prompt", message };
+        if (Array.isArray(callbacks.images) && callbacks.images.length > 0) {
+          command.images = callbacks.images;
+        }
+        this.send(command);
+      } catch (error) {
+        this.rejectCurrent(error);
+      }
     });
   }
 
-  stop() {
+  stop(options = {}) {
+    if (options.rejectCurrent !== false) {
+      this.rejectCurrent(new Error("Pi session stopped before the response completed."));
+    }
     if (this.proc && !this.proc.killed) {
-      this.proc.kill();
+      if (process.platform === "win32" && Number(this.proc.pid) > 0) {
+        spawnSync(
+          "taskkill.exe",
+          ["/pid", String(this.proc.pid), "/T", "/F"],
+          {
+            windowsHide: true,
+            stdio: "ignore",
+          },
+        );
+      }
+      try {
+        this.proc.kill();
+      } catch {
+        // The process tree may already be gone.
+      }
     }
   }
 }
@@ -256,7 +340,9 @@ class PiRpcSession {
 module.exports = {
   PiRpcSession,
   buildPiEnv,
+  buildSessionArgs,
   homePath,
   piAvailable,
   readJson,
+  resolvePiCommand,
 };

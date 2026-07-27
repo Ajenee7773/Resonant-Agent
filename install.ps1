@@ -75,14 +75,14 @@ function Download-RepoIfNeeded {
 
 function Check-Node {
   if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-    Fail "Node.js is not installed. Install Node.js 18+ and run this again."
+    Fail "Node.js is required. Install Node.js 18 or newer from https://nodejs.org/en/download, then run this installer again."
   }
   $major = & node -e "process.stdout.write(process.versions.node.split('.')[0])"
   if ([int]$major -lt 18) {
     Fail "Node.js 18+ is required. Current version: $(node -v)"
   }
   if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
-    Fail "npm is not installed or not on PATH."
+    Fail "npm was not found on PATH. Reinstall Node.js 18 or newer from https://nodejs.org/en/download, then run this installer again."
   }
 }
 
@@ -137,6 +137,15 @@ foreach ($dir in @(
   New-Item -ItemType Directory -Force -Path $dir | Out-Null
 }
 
+if ((Test-Path -LiteralPath (Join-Path $PiAppDir "package.json") -PathType Leaf) -and
+    $env:RESONANT_SKIP_PRE_UPGRADE_BACKUP -ne "1") {
+  Write-Step "Creating a safe pre-upgrade backup..."
+  & node (Join-Path $ScriptDir "scripts\create-pre-upgrade-backup.js")
+  if ($LASTEXITCODE -ne 0) {
+    Fail "The pre-upgrade backup failed. Existing application files were not replaced."
+  }
+}
+
 Write-Step "Copying harness files..."
 if (Test-Path -LiteralPath "$HarnessDir\AGENTS.md") {
   if (Test-Path -LiteralPath "$PiAgentDir\AGENTS.md") {
@@ -145,7 +154,7 @@ if (Test-Path -LiteralPath "$HarnessDir\AGENTS.md") {
   Copy-Item -LiteralPath "$HarnessDir\AGENTS.md" -Destination "$PiAgentDir\AGENTS.md" -Force
 }
 
-foreach ($file in @("SOUL.md","CONSTITUTION.md","FOUNDATION.md","HEARTBEAT.md","MEMORY.md","TOOLS.md","ROOMS.md","TRANSFER.md")) {
+foreach ($file in @("SOUL.md","CONSTITUTION.md","FOUNDATION.md","HEARTBEAT.md","MEMORY.md","MY-HARNESS.md","TOOLS.md","ROOMS.md","TRANSFER.md")) {
   $src = Join-Path $HarnessDir $file
   if (Test-Path -LiteralPath $src) {
     Copy-Item -LiteralPath $src -Destination (Join-Path $PiAgentDir $file) -Force
@@ -187,12 +196,16 @@ if (Test-Path -LiteralPath "$HarnessDir\os-skill") {
 
 Write-Step "Copying RESONANT Agent launchers..."
 Copy-DirContents "$ScriptDir\bridge" "$PiAppDir\bridge"
+Copy-DirContents "$ScriptDir\core" "$PiAppDir\core"
+Copy-DirContents "$ScriptDir\defaults" "$PiAppDir\defaults"
+Copy-DirContents "$ScriptDir\interfaces" "$PiAppDir\interfaces"
+Copy-DirContents "$ScriptDir\schemas" "$PiAppDir\schemas"
 Copy-DirContents "$ScriptDir\scripts" "$PiAppDir\scripts"
 Copy-DirContents "$ScriptDir\ui" "$PiAppDir\ui"
 Copy-DirContents "$ScriptDir\heartbeat" "$PiAppDir\heartbeat"
 Copy-DirContents "$ScriptDir\telegram" "$PiAppDir\telegram"
 
-foreach ($file in @("install.bat","install.ps1","configure.bat","configure.ps1","start.bat","start.ps1","ui.bat","heartbeat-start.bat","heartbeat-start.ps1","telegram-setup.bat","telegram-start.bat","package.json","README.md","RELEASE.md")) {
+foreach ($file in @("install.bat","install.ps1","configure.bat","configure.ps1","start.bat","start.ps1","ui.bat","heartbeat-start.bat","heartbeat-start.ps1","telegram-setup.bat","telegram-start.bat","telegram-disconnect.bat","config.template.json","package.json","README.md","RELEASE.md","soul.json","version.json")) {
   $src = Join-Path $ScriptDir $file
   if (Test-Path -LiteralPath $src) {
     Copy-Item -LiteralPath $src -Destination (Join-Path $PiAppDir $file) -Force

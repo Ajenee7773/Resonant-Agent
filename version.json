@@ -1,0 +1,7 @@
+{
+  "application": "0.2.0",
+  "config_schema": 1,
+  "soul_schema": 1,
+  "harness_content": 1,
+  "migration_set": 1
+}

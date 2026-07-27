@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://resonant-agent.local/schemas/soul.schema.json",
+  "title": "RESONANT Agent Soul",
+  "type": "object",
+  "required": ["format", "version", "identity", "framework", "boundaries", "system_instructions"],
+  "properties": {
+    "format": { "const": "resonant-agent-soul" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "identity": {
+      "type": "object",
+      "required": ["name", "role", "bio", "traits"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "bio": { "type": "array", "items": { "type": "string" } },
+        "traits": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "framework": { "type": "object" },
+    "boundaries": { "type": "object" },
+    "system_instructions": { "type": "array", "items": { "type": "string" } },
+    "memory": { "type": "object" },
+    "audio": { "type": "object" },
+    "interfaces": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

@@ -32,6 +32,10 @@ function Load-AuthEnv {
 
 Write-Host "RESONANT Agent start"
 
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  throw "Node.js 18 or newer is required. Install it from https://nodejs.org/en/download, then start RESONANT Agent again."
+}
+
 if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
   Write-Host "Pi runtime is not installed yet. Installing RESONANT Agent now..."
   $previousSkip = $env:RESONANT_SKIP_CONFIG_PROMPT

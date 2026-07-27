@@ -1,11 +1,9 @@
-const fs = require("node:fs");
-const os = require("node:os");
+const crypto = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline/promises");
 const { stdin: input, stdout: output } = require("node:process");
-
-const resonantHome = process.env.RESONANT_HOME || path.join(os.homedir(), ".resonant");
-const configPath = path.join(resonantHome, "agent", "telegram.json");
+const { readJson, writeJson } = require("../core/json-store");
+const { initializeRuntime } = require("../core/runtime");
 
 async function telegram(token, method, params = {}) {
   const url = `https://api.telegram.org/bot${token}/${method}`;
@@ -21,14 +19,53 @@ async function telegram(token, method, params = {}) {
   return json.result;
 }
 
-function writeConfig(config) {
-  fs.mkdirSync(path.dirname(configPath), { recursive: true });
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
+function writeConfig(runtime, configPath, config) {
+  const credentials = readJson(runtime.paths.credentialsFile, {
+    schema_version: 1,
+  });
+  credentials.telegram_bot_token = config.token;
+  writeJson(runtime.paths.credentialsFile, credentials, { mode: 0o600 });
+
+  const settings = readJson(runtime.paths.settingsFile);
+  settings.interfaces ||= {};
+  settings.interfaces.telegram = {
+    ...(settings.interfaces.telegram || {}),
+    enabled: true,
+    allowed_chat_ids: config.allowedChats,
+  };
+  writeJson(runtime.paths.settingsFile, settings);
+
+  writeJson(configPath, {
+    enabled: true,
+    bot: config.bot,
+    offset: config.offset,
+    mode: "long-polling",
+    created_at: config.createdAt,
+  });
 }
 
-async function waitForFirstChat(token) {
+function pairingMessageMatches(text, pairingCode) {
+  const message = String(text || "").trim().toLowerCase();
+  const code = String(pairingCode || "").trim().toLowerCase();
+  if (!code) return false;
+  return message === `/start ${code}` || message === `pair ${code}`;
+}
+
+async function questionSecret(rl, prompt) {
+  output.write(prompt);
+  const writeToOutput = rl._writeToOutput;
+  rl._writeToOutput = () => {};
+  try {
+    return (await rl.question("")).trim();
+  } finally {
+    rl._writeToOutput = writeToOutput;
+    output.write("\n");
+  }
+}
+
+async function waitForFirstChat(token, pairingCode) {
   let offset = 0;
-  const deadline = Date.now() + 120000;
+  const deadline = Date.now() + 5 * 60 * 1000;
   while (Date.now() < deadline) {
     const updates = await telegram(token, "getUpdates", {
       timeout: 20,
@@ -38,7 +75,10 @@ async function waitForFirstChat(token) {
     for (const update of updates) {
       offset = Math.max(offset, update.update_id + 1);
       const message = update.message;
-      if (message?.chat?.id && message.text) {
+      if (
+        message?.chat?.id &&
+        pairingMessageMatches(message.text, pairingCode)
+      ) {
         return {
           chatId: String(message.chat.id),
           title:
@@ -51,10 +91,12 @@ async function waitForFirstChat(token) {
       }
     }
   }
-  throw new Error("Timed out waiting for a Telegram /start message.");
+  throw new Error("Timed out waiting for the one-time Telegram pairing code.");
 }
 
 async function main() {
+  const runtime = initializeRuntime();
+  const configPath = path.join(runtime.paths.data, "telegram", "config.json");
   const rl = readline.createInterface({ input, output });
   try {
     console.log("RESONANT Agent Telegram setup");
@@ -63,17 +105,22 @@ async function main() {
     console.log("3. Run /newbot and copy the bot token.");
     console.log("");
 
-    const token = (await rl.question("Telegram bot token: ")).trim();
+    const token = await questionSecret(rl, "Telegram bot token (hidden): ");
     if (!token) throw new Error("No token provided.");
 
     const bot = await telegram(token, "getMe");
     console.log(`Connected to bot: @${bot.username || bot.first_name}`);
     console.log("");
-    console.log("Now send /start to your bot in Telegram.");
-    console.log("Waiting for the first message...");
+    const pairingCode = crypto.randomBytes(6).toString("hex");
+    console.log("Pair this computer with your private Telegram chat:");
+    if (bot.username) {
+      console.log(`  Open https://t.me/${bot.username}?start=${pairingCode}`);
+    }
+    console.log(`  Or send: /start ${pairingCode}`);
+    console.log("Waiting up to five minutes for that one-time code...");
 
-    const firstChat = await waitForFirstChat(token);
-    const answer = (await rl.question(`Use chat "${firstChat.title}" (${firstChat.chatId}) for RESONANT? [Y/n]: `)).trim();
+    const firstChat = await waitForFirstChat(token, pairingCode);
+    const answer = (await rl.question(`Allow chat "${firstChat.title}" (${firstChat.chatId})? [Y/n]: `)).trim();
     if (answer && answer.toLowerCase() === "n") {
       console.log("Telegram setup cancelled.");
       return;
@@ -93,10 +140,10 @@ async function main() {
       createdAt: new Date().toISOString(),
     };
 
-    writeConfig(config);
+    writeConfig(runtime, configPath, config);
     await telegram(token, "sendMessage", {
       chat_id: firstChat.chatId,
-      text: "RESONANT Agent Telegram bridge is connected. Start the bridge on your computer to talk to your agent here.",
+      text: "RESONANT Agent is connected. Start the local bridge to talk to your entity here.",
     });
 
     console.log("");
@@ -108,7 +155,13 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(`Telegram setup failed: ${error.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`Telegram setup failed: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  pairingMessageMatches,
+};

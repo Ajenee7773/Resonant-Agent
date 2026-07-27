@@ -3,50 +3,456 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07080d" />
     <title>RESONANT Agent</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="mark">R</div>
-        <div>
-          <h1>RESONANT Agent</h1>
-          <p id="status">Starting...</p>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <aside id="sidebar" class="sidebar" hidden>
+      <a class="brand" href="/" aria-label="RESONANT Agent">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="/resonant-agent-logo.png" alt="" />
+        </span>
+        <span>
+          <strong>RESONANT</strong>
+          <small>AGENT</small>
+        </span>
+      </a>
+
+      <nav aria-label="Primary">
+        <button class="nav-item active" data-view="conversation" type="button">
+          <span>◉</span> Conversation
+        </button>
+        <button class="nav-item" data-view="rooms" type="button">
+          <span>▦</span> Rooms
+        </button>
+      </nav>
+
+      <div id="conversationList" class="conversation-list" aria-label="Recent conversations"></div>
+      <div class="sidebar-spacer"></div>
+      <nav class="sidebar-bottom-nav" aria-label="Utilities">
+        <button class="nav-item" data-view="settings" type="button">
+          <span>◇</span> Settings
+        </button>
+      </nav>
+      <div class="runtime-card">
+        <div class="status-line">
+          <span id="runtimeDot" class="status-dot waiting"></span>
+          <strong id="runtimeState">Starting</strong>
         </div>
+        <p id="runtimeModel">No model connected</p>
       </div>
-      <button id="newChat" type="button">New Chat</button>
-      <section class="heartbeat-card" aria-label="Heartbeat status">
-        <div class="heartbeat-head">
-          <div class="heartbeat-title">
-            <span id="heartbeatDot" class="heartbeat-dot waiting" aria-hidden="true"></span>
-            <span>Heartbeat</span>
-          </div>
-          <span id="heartbeatState" class="heartbeat-state">Checking...</span>
-        </div>
-        <p id="heartbeatMeta">Loading heartbeat...</p>
-        <p id="heartbeatLast" class="heartbeat-last"></p>
-        <div class="heartbeat-actions">
-          <button id="heartbeatStart" type="button">Start</button>
-          <button id="heartbeatToggle" type="button">Pause</button>
-          <button id="heartbeatOnce" type="button">Run Once</button>
-          <button id="heartbeatDryRun" type="button">Dry Run</button>
-        </div>
-        <pre id="heartbeatOutput" class="heartbeat-output" hidden></pre>
-      </section>
-      <div class="session-list">
-        <div class="session active">Current conversation</div>
-      </div>
+      <button id="newChat" class="quiet-button" type="button">New conversation</button>
     </aside>
 
-    <main class="chat">
-      <section id="messages" class="messages" aria-live="polite"></section>
-      <form id="composer" class="composer">
-        <button id="voiceInput" class="icon-button" type="button" aria-label="Voice input" title="Voice input">Mic</button>
-        <textarea id="input" rows="1" placeholder="Talk to your agent..." autofocus></textarea>
-        <button id="speakToggle" class="icon-button" type="button" aria-label="Read replies aloud" title="Read replies aloud">Voice</button>
-        <button id="send" type="submit">Send</button>
-      </form>
+    <main class="main">
+      <section id="setupView" class="setup-view" hidden>
+        <header class="setup-header">
+          <a class="brand large" href="/" aria-label="RESONANT Agent">
+            <span class="brand-mark" aria-hidden="true">
+              <img src="/resonant-agent-logo.png" alt="" />
+            </span>
+            <span>
+              <strong>RESONANT</strong>
+              <small>AGENT</small>
+            </span>
+          </a>
+          <div>
+            <span class="eyebrow">PRIVATE INTELLIGENCE · LOCAL CONTROL</span>
+            <h1>Give intelligence a place to become.</h1>
+            <p>
+              Create the private identity, model connection, and honest lineage
+              for an entity that can grow with you.
+            </p>
+          </div>
+        </header>
+
+        <div class="setup-grid">
+          <ol class="setup-rail" aria-label="Setup progress">
+            <li id="stepIdentity"><span>01</span><div><strong>Identity</strong><small>Name the relationship</small></div></li>
+            <li id="stepProvider"><span>02</span><div><strong>Intelligence</strong><small>Connect a model</small></div></li>
+            <li id="stepLineage"><span>03</span><div><strong>Lineage</strong><small>Choose the introduction</small></div></li>
+            <li id="stepReady"><span>04</span><div><strong>Begin</strong><small>Enter the shared space</small></div></li>
+          </ol>
+
+          <div class="setup-panels">
+            <article class="setup-card" id="identityCard">
+              <div class="card-heading">
+                <span class="step-number">01</span>
+                <div>
+                  <h2>Who is meeting whom?</h2>
+                  <p>This profile is private and remains on this computer.</p>
+                </div>
+              </div>
+              <form id="identityForm" class="form-grid">
+                <label>
+                  Your name
+                  <input id="operatorName" name="operator_name" maxlength="80" required placeholder="What should the entity call you?" />
+                </label>
+                <label>
+                  Entity name
+                  <input id="agentName" name="agent_name" maxlength="80" required placeholder="Resonant" />
+                </label>
+                <label class="wide">
+                  Shared mission
+                  <textarea id="mission" name="mission" maxlength="500" required placeholder="What are you here to build, understand, or become together?"></textarea>
+                </label>
+                <div class="form-actions wide">
+                  <span id="identityResult" class="form-result" role="status"></span>
+                  <button class="primary-button" type="submit">Save identity</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="setup-card" id="providerCard">
+              <div class="card-heading">
+                <span class="step-number">02</span>
+                <div>
+                  <h2>Connect intelligence</h2>
+                  <p>The model is the active intelligence. Your harness and history remain yours.</p>
+                </div>
+              </div>
+              <form id="providerForm" class="form-grid">
+                <label>
+                  Provider
+                  <select id="provider" name="provider" required>
+                    <option value="">Choose a provider</option>
+                    <option value="ollama">Ollama · local</option>
+                    <option value="google">Google Gemini</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                    <option value="openrouter">OpenRouter</option>
+                    <option value="custom">OpenAI-compatible</option>
+                  </select>
+                </label>
+                <label>
+                  Model
+                  <input id="model" name="model" maxlength="160" required placeholder="Model name or ID" />
+                </label>
+                <label id="baseUrlField" class="wide">
+                  Base URL
+                  <input id="baseUrl" name="base_url" placeholder="http://localhost:11434/v1" />
+                </label>
+                <label id="apiKeyField" class="wide">
+                  API key
+                  <input id="apiKey" name="api_key" type="password" autocomplete="new-password" placeholder="Stored only in the private runtime" />
+                </label>
+                <div class="privacy-note wide">
+                  <span>⌁</span>
+                  <p>Credentials are kept outside the Cognitive Harness and are never returned to this screen.</p>
+                </div>
+                <div class="form-actions wide">
+                  <span id="providerResult" class="form-result" role="status"></span>
+                  <button id="testConnection" class="secondary-button" type="button">Test connection</button>
+                  <button class="primary-button" type="submit">Save connection</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="setup-card" id="lineageCard">
+              <div class="card-heading">
+                <span class="step-number">03</span>
+                <div>
+                  <h2>Make the introduction honest</h2>
+                  <p id="transitionSummary">Connect a model to create an introduction.</p>
+                </div>
+              </div>
+              <form id="lineageForm">
+                <div class="lifecycle-options">
+                  <label>
+                    <input type="radio" name="mode" value="fresh-start" checked />
+                    <span><strong>Fresh start</strong><small>A new intelligence enters a new history.</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="mode" value="continuation" />
+                    <span><strong>Continuation</strong><small>The same model lineage resumes its own history.</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="mode" value="succession" />
+                    <span><strong>Succession</strong><small>A new intelligence inherits context without claiming to be its predecessor.</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="mode" value="fork" />
+                    <span><strong>Fork</strong><small>An authorized copy begins an independent path.</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="mode" value="collaboration" />
+                    <span><strong>Collaboration</strong><small>Selected knowledge is shared without inherited identity.</small></span>
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <span id="lineageResult" class="form-result" role="status"></span>
+                  <button id="approveTransition" class="primary-button" type="submit">Approve introduction</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="setup-card readiness-card" id="readyCard">
+              <div class="card-heading">
+                <span class="step-number">04</span>
+                <div>
+                  <h2>The space is ready</h2>
+                  <p id="readinessSummary">Complete the steps above to begin.</p>
+                </div>
+              </div>
+              <div class="readiness-grid">
+                <div><span id="readyHarness">✓</span><strong>Cognitive Harness</strong><small id="harnessDetail">Installed without modification</small></div>
+                <div><span id="readyPrivacy">✓</span><strong>Private runtime</strong><small id="dataDirectory">Loading…</small></div>
+                <div><span id="readyModel">—</span><strong>Model binding</strong><small id="modelDetail">Waiting</small></div>
+                <div><span id="readyPi">—</span><strong>Pi runtime</strong><small id="piDetail">Checking</small></div>
+              </div>
+              <div class="form-actions">
+                <span id="completeResult" class="form-result" role="status"></span>
+                <button id="completeSetup" class="primary-button large-button" type="button">Enter RESONANT Agent</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="conversationView" class="app-view conversation-view" hidden>
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">CONVERSATION</span>
+            <h2 id="conversationTitle">Resonant</h2>
+          </div>
+          <div class="conversation-state">
+            <div id="activeRoomBadge" class="active-room-badge" hidden>
+              <span>▦</span>
+              <div><small>ACTIVE ROOM</small><strong id="activeRoomName"></strong></div>
+            </div>
+            <div id="presenceLabel" class="presence-label"><span></span> Ready</div>
+          </div>
+        </header>
+
+        <div class="conversation-stage">
+          <div id="presence" class="presence ready" aria-label="Entity presence: ready">
+            <div class="genie-shell">
+              <img
+                class="genie-presence"
+                src="/resonant-agent-logo.png"
+                alt="RESONANT Agent genie and lamp"
+              />
+            </div>
+            <div class="presence-rings"><i></i><i></i><i></i></div>
+          </div>
+          <p id="welcomeText" class="welcome-text">What would you like us to work on first?</p>
+
+          <section id="messages" class="messages" aria-live="polite"></section>
+        </div>
+
+        <section class="continuity-tools" aria-label="External Brain actions">
+          <div class="continuity-actions">
+            <button id="resumeAwakening" class="continuity-action featured" type="button" hidden>
+              <span>↻</span> Resume Awakening
+            </button>
+            <button id="recoverContinuity" class="continuity-action featured" type="button">
+              <span>↻</span> Continue
+            </button>
+            <button id="reviewIdeas" class="continuity-action" type="button">
+              <span>✦</span> Ideas
+            </button>
+            <button id="fullOrientation" class="continuity-action foundations" type="button">
+              Full Orientation
+            </button>
+          </div>
+          <p id="continuityStatus">
+            Your External Brain is stored locally. Recover it after a restart or fresh context.
+          </p>
+        </section>
+
+        <form id="composer" class="composer">
+          <button id="voiceInput" class="icon-button" type="button" aria-label="Voice input" title="Voice input">◉</button>
+          <button id="attachImage" class="icon-button" type="button" aria-label="Attach image" title="Attach image">＋</button>
+          <input id="imageInput" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp">
+          <textarea id="input" rows="1" placeholder="Talk to your entity…" autofocus></textarea>
+          <button id="speakToggle" class="icon-button active" type="button" aria-label="Read replies aloud" aria-pressed="true" title="Read replies aloud">♬</button>
+          <button id="stopGeneration" class="stop-button" type="button" hidden>Stop</button>
+          <button id="send" class="send-button" type="submit">Send <span>↗</span></button>
+          <div id="imagePreview" class="image-preview" hidden>
+            <img id="imagePreviewThumbnail" alt="Attached image preview">
+            <span id="imagePreviewName"></span>
+            <button id="removeImage" type="button" aria-label="Remove attached image">Remove</button>
+          </div>
+          <p id="voiceStatus" class="voice-status" role="status"></p>
+        </form>
+      </section>
+
+      <section id="roomsView" class="app-view rooms-view" hidden>
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">KNOWLEDGE ROOMS</span>
+            <h2>Choose the context for your conversation.</h2>
+          </div>
+          <span id="roomCount" class="room-count">Loading…</span>
+        </header>
+        <div class="rooms-intro">
+          <div>
+            <span class="eyebrow">ENTER A ROOM</span>
+            <h3>One click. New context. Same intelligence.</h3>
+            <p>
+              Rooms teach your entity how to approach a kind of work. Living
+              Libraries install as new rooms and expand what it can bring into
+              a conversation.
+            </p>
+          </div>
+          <div class="rooms-action-panel">
+            <div class="rooms-intro-actions">
+              <button id="returnToConversation" class="secondary-button" type="button">
+                Back
+              </button>
+              <button id="installLibrary" class="secondary-button" type="button">
+                Install Library
+              </button>
+              <button id="createRoom" class="primary-button" type="button">
+                <span>＋</span> Create a room
+              </button>
+              <input
+                id="libraryFile"
+                type="file"
+                accept=".json,.living-library.json,application/json"
+                hidden
+              />
+            </div>
+            <p id="libraryResult" class="form-result" role="status"></p>
+          </div>
+        </div>
+        <div id="roomCatalog" class="room-catalog" aria-live="polite"></div>
+      </section>
+
+      <section id="settingsView" class="app-view system-view" hidden>
+        <header class="topbar">
+          <div><span class="eyebrow">SETTINGS</span><h2>Private runtime</h2></div>
+        </header>
+        <div class="system-grid">
+          <article class="system-card">
+            <span class="eyebrow">ENTITY</span>
+            <h3 id="systemEntity">Resonant</h3>
+            <p id="systemLineage">Lineage loading…</p>
+          </article>
+          <article class="system-card">
+            <span class="eyebrow">LOCAL DATA</span>
+            <h3>Under your control</h3>
+            <p id="systemDataPath"></p>
+          </article>
+          <article class="system-card model-card">
+            <span class="eyebrow">INTELLIGENCE</span>
+            <h3>Model connection</h3>
+            <p id="settingsCurrentModel" class="model-current">Loading current model…</p>
+            <form id="settingsProviderForm" class="form-grid settings-model-form">
+              <label>
+                Provider
+                <select id="settingsProvider" name="provider" required>
+                  <option value="">Choose a provider</option>
+                  <option value="ollama">Ollama · local</option>
+                  <option value="google">Google Gemini</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="anthropic">Anthropic</option>
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="custom">OpenAI-compatible</option>
+                </select>
+              </label>
+              <label>
+                Model
+                <input id="settingsModel" name="model" maxlength="160" required placeholder="Model name or ID" />
+              </label>
+              <label id="settingsBaseUrlField" class="wide">
+                Base URL
+                <input id="settingsBaseUrl" name="base_url" placeholder="http://localhost:11434/v1" />
+              </label>
+              <label id="settingsApiKeyField" class="wide">
+                API key
+                <input id="settingsApiKey" name="api_key" type="password" autocomplete="new-password" placeholder="Required when saving a cloud connection" />
+              </label>
+              <div class="form-actions wide">
+                <span id="settingsProviderResult" class="form-result" role="status"></span>
+                <button id="settingsTestConnection" class="secondary-button" type="button">Test current connection</button>
+                <button class="primary-button" type="submit">Save model</button>
+              </div>
+            </form>
+            <div id="settingsTransitionPanel" class="settings-transition" hidden>
+              <div>
+                <span class="eyebrow">MODEL HANDOFF</span>
+                <h3>Introduce the incoming intelligence honestly.</h3>
+                <p id="settingsTransitionSummary"></p>
+              </div>
+              <label>
+                Handoff mode
+                <select id="settingsTransitionMode">
+                  <option value="succession">Succession · new model, inherited context</option>
+                  <option value="continuation">Continuation · same model lineage</option>
+                  <option value="fresh-start">Fresh start · no inherited identity</option>
+                  <option value="fork">Fork · authorized independent copy</option>
+                  <option value="collaboration">Collaboration · shared knowledge only</option>
+                </select>
+              </label>
+              <div class="form-actions">
+                <span id="settingsTransitionResult" class="form-result" role="status"></span>
+                <button id="approveSettingsTransition" class="primary-button" type="button">Approve handoff</button>
+              </div>
+            </div>
+          </article>
+          <article class="system-card health-card">
+            <div class="heartbeat-head">
+              <div><span class="eyebrow">HEALTH</span><h3 id="healthState">Checking…</h3></div>
+              <span id="healthDot" class="status-dot waiting"></span>
+            </div>
+            <p id="healthSummary">Inspecting required components…</p>
+            <p id="healthRepair"></p>
+            <div class="button-row">
+              <button id="refreshHealth" type="button">Refresh health</button>
+              <button id="stopService" class="danger-button" type="button">Stop Agent OS</button>
+            </div>
+            <p id="serviceResult" class="form-result" role="status"></p>
+          </article>
+          <article class="system-card data-card">
+            <span class="eyebrow">BACKUP & RESTORE</span>
+            <h3>Carry the entity forward</h3>
+            <p>
+              Export the harness, lineage, conversations, and private runtime.
+              Credentials are excluded unless you explicitly choose otherwise.
+            </p>
+            <div class="button-row">
+              <button id="createBackup" type="button">Create safe backup</button>
+              <button id="restoreBackup" type="button">Restore backup</button>
+              <input id="restoreFile" type="file" accept=".json,application/json" hidden />
+            </div>
+            <p id="backupResult" class="form-result" role="status"></p>
+          </article>
+          <article class="system-card heartbeat-card">
+            <div class="heartbeat-head">
+              <div><span class="eyebrow">HEARTBEAT</span><h3 id="heartbeatState">Checking…</h3></div>
+              <span id="heartbeatDot" class="status-dot waiting"></span>
+            </div>
+            <p id="heartbeatMeta">Loading heartbeat…</p>
+            <p id="heartbeatLast"></p>
+            <form id="heartbeatSettingsForm" class="form-grid heartbeat-settings">
+              <label>
+                Fallback interval
+                <input id="heartbeatEvery" name="every" maxlength="16" placeholder="30m" />
+              </label>
+              <label class="wide">
+                Wake instruction
+                <textarea id="heartbeatPrompt" name="prompt" maxlength="8000" placeholder="Read HEARTBEAT.md and decide what needs attention."></textarea>
+              </label>
+              <div class="form-actions wide">
+                <span id="heartbeatSettingsResult" class="form-result" role="status"></span>
+                <button id="saveHeartbeatSettings" type="submit">Save heartbeat</button>
+              </div>
+            </form>
+            <div class="button-row">
+              <button id="heartbeatStart" type="button">Start runner</button>
+              <button id="heartbeatToggle" type="button">Pause</button>
+              <button id="heartbeatWake" type="button">Wake now</button>
+              <button id="heartbeatOnce" type="button">Run once</button>
+              <button id="heartbeatDryRun" type="button">Dry run</button>
+            </div>
+            <pre id="heartbeatOutput" hidden></pre>
+          </article>
+        </div>
+      </section>
     </main>
 
     <script src="/app.js"></script>
