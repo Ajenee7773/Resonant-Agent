@@ -127,6 +127,26 @@ test("Commands Room routes work into the relevant room", () => {
   assert.match(commandsProtocol, /COMMANDS\.md/);
 });
 
+test("Communications Room teaches exact Pi session continuity", () => {
+  const continuity = fs.readFileSync(
+    path.resolve(
+      __dirname,
+      "..",
+      "harness",
+      "rooms",
+      "communications",
+      "SESSION-CONTINUITY.md",
+    ),
+    "utf8",
+  );
+  assert.match(continuity, /Conversation transcript/);
+  assert.match(continuity, /Exact Pi session/);
+  assert.match(continuity, /External Brain/);
+  assert.match(continuity, /active-session\.json/);
+  assert.match(continuity, /get_state/);
+  assert.match(continuity, /--session <exact-file>/);
+});
+
 test("packaged catalog exposes the original RESONANT rooms and hides system rooms", () => {
   const paths = {
     rooms: path.resolve(__dirname, "..", "harness", "rooms"),
@@ -138,6 +158,7 @@ test("packaged catalog exposes the original RESONANT rooms and hides system room
     [
       "art",
       "commands",
+      "communications",
       "planning",
       "prompt-engineering",
       "short-term",

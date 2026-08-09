@@ -138,16 +138,102 @@ function extractTextFromMessage(message) {
 
 function buildSessionArgs(options = {}) {
   const args = ["--mode", "rpc", "--session-dir", options.sessionDir];
-  if (options.resume !== false) args.push("--continue");
+  if (options.sessionFile) {
+    args.push("--session", options.sessionFile);
+  } else if (options.resume !== false) {
+    args.push("--continue");
+  }
   if (options.provider) args.push("--provider", options.provider);
   if (options.model) args.push("--model", options.model);
   return args;
+}
+
+function sessionPinFile(sessionDir) {
+  return path.join(path.resolve(sessionDir), "active-session.json");
+}
+
+function validatedSessionFile(sessionDir, candidate, options = {}) {
+  if (!candidate) return "";
+  const directory = path.resolve(sessionDir);
+  const sessionFile = path.resolve(String(candidate));
+  const relative = path.relative(directory, sessionFile);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return "";
+  if (path.extname(sessionFile).toLowerCase() !== ".jsonl") return "";
+  if (options.mustExist !== false && !fs.existsSync(sessionFile)) return "";
+  return sessionFile;
+}
+
+function readSessionPin(sessionDir, pinFile = sessionPinFile(sessionDir)) {
+  const pin = readJson(pinFile, {});
+  if (pin.format !== "aligned-pi-session-pin" || Number(pin.version) !== 1) return "";
+  const candidate = path.isAbsolute(String(pin.session_file || ""))
+    ? pin.session_file
+    : path.join(path.resolve(sessionDir), String(pin.session_file || ""));
+  return validatedSessionFile(sessionDir, candidate);
+}
+
+function mostRecentSessionFile(sessionDir) {
+  try {
+    return fs
+      .readdirSync(sessionDir, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".jsonl"))
+      .map((entry) => {
+        const file = path.join(sessionDir, entry.name);
+        return { file, modified: fs.statSync(file).mtimeMs };
+      })
+      .sort((left, right) => right.modified - left.modified)[0]?.file || "";
+  } catch {
+    return "";
+  }
+}
+
+function writeSessionPin(sessionDir, candidate, pinFile = sessionPinFile(sessionDir)) {
+  let temporary = "";
+  try {
+    const sessionFile = validatedSessionFile(sessionDir, candidate);
+    if (!sessionFile) return false;
+    const directory = path.resolve(sessionDir);
+    fs.mkdirSync(directory, { recursive: true });
+    const target = path.resolve(pinFile);
+    const relative = path.relative(directory, target);
+    if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return false;
+    temporary = `${target}.${process.pid}.${Date.now()}.tmp`;
+    fs.writeFileSync(
+      temporary,
+      `${JSON.stringify(
+        {
+          format: "aligned-pi-session-pin",
+          version: 1,
+          session_file: path.relative(directory, sessionFile).replace(/\\/g, "/"),
+          pinned_at: new Date().toISOString(),
+        },
+        null,
+        2,
+      )}\n`,
+      { encoding: "utf8", mode: 0o600 },
+    );
+    fs.renameSync(temporary, target);
+    return true;
+  } catch {
+    if (temporary) {
+      try {
+        fs.rmSync(temporary, { force: true });
+      } catch {
+        // A failed continuity receipt must not crash the active conversation.
+      }
+    }
+    return false;
+  }
 }
 
 class PiRpcSession {
   constructor(options = {}) {
     this.cwd = options.cwd || process.env.PI_WORKSPACE || homePath("workspace");
     this.sessionDir = options.sessionDir || homePath("data", "sessions", "terminal");
+    this.pinFile = options.pinFile || sessionPinFile(this.sessionDir);
+    this.sessionFile =
+      validatedSessionFile(this.sessionDir, options.sessionFile) ||
+      readSessionPin(this.sessionDir, this.pinFile);
     this.provider = options.provider || "";
     this.model = options.model || "";
     this.resume = options.resume !== false;
@@ -166,6 +252,7 @@ class PiRpcSession {
 
     const args = buildSessionArgs({
       sessionDir: this.sessionDir,
+      sessionFile: this.sessionFile,
       resume: this.resume,
       provider: this.provider,
       model: this.model,
@@ -233,6 +320,17 @@ class PiRpcSession {
 
     this.current?.onEvent?.(event);
 
+    if (
+      event.type === "response" &&
+      event.command === "get_state" &&
+      event.success === true &&
+      event.data?.sessionFile
+    ) {
+      if (writeSessionPin(this.sessionDir, event.data.sessionFile, this.pinFile)) {
+        this.sessionFile = path.resolve(event.data.sessionFile);
+      }
+    }
+
     if (event.type === "message_update") {
       const update = event.assistantMessageEvent || {};
       if (update.type === "text_delta" && typeof update.delta === "string") {
@@ -268,7 +366,22 @@ class PiRpcSession {
         const lastAssistant = [...event.messages].reverse().find((message) => message.role === "assistant");
         text = extractTextFromMessage(lastAssistant);
       }
+      const activeFile = mostRecentSessionFile(this.sessionDir);
+      if (writeSessionPin(this.sessionDir, activeFile, this.pinFile)) {
+        this.sessionFile = path.resolve(activeFile);
+      }
       this.resolveCurrent(text);
+      this.requestSessionPin();
+    }
+  }
+
+  requestSessionPin() {
+    if (!this.proc?.stdin?.writable) return false;
+    try {
+      this.proc.stdin.write(`${JSON.stringify({ type: "get_state" })}\n`);
+      return true;
+    } catch {
+      return false;
     }
   }
 
@@ -344,5 +457,8 @@ module.exports = {
   homePath,
   piAvailable,
   readJson,
+  readSessionPin,
   resolvePiCommand,
+  sessionPinFile,
+  writeSessionPin,
 };

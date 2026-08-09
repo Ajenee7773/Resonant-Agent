@@ -14,6 +14,15 @@ If another agent can do something, RESONANT can learn the pattern. Show it the r
 
 The point is simple: **the agent is naturally capable. You restrain it by choosing what access, keys, tools, folders, and commands you give it.**
 
+## Continuity That Survives Restart
+
+RESONANT Agent stores the readable conversation transcript, the agent's
+curated External Brain, and the model-native Pi session locally. Every web
+conversation owns an isolated session directory. After a response, the OS pins
+the exact Pi session file and reopens that file after restart instead of
+guessing from whichever session was active most recently. The Communications
+Room teaches the same pattern for new connectors and permanent resident agents.
+
 ## Recommended LLM Paths
 
 1. **DeepSeek API** — best default for full-power agent work. Use DeepSeek Pro (`deepseek-v4-pro`) for long-context reasoning and DeepSeek Flash (`deepseek-v4-flash`) for cheaper high-volume work. Platform: https://platform.deepseek.com
