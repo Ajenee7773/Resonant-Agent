@@ -24,6 +24,11 @@ test("knowledge catalog hides private continuity rooms", (t) => {
   const paths = fixture(t);
   fs.mkdirSync(path.join(paths.rooms, "memory"), { recursive: true });
   fs.writeFileSync(path.join(paths.rooms, "memory", "MEMORY.md"), "private");
+  fs.mkdirSync(path.join(paths.rooms, "unfinished-notes"), { recursive: true });
+  fs.writeFileSync(
+    path.join(paths.rooms, "unfinished-notes", "README.md"),
+    "Not a room until it has a manifest.",
+  );
   fs.mkdirSync(path.join(paths.rooms, "script-writing"), { recursive: true });
   fs.writeFileSync(
     path.join(paths.rooms, "script-writing", "room.json"),
@@ -64,6 +69,10 @@ test("room descriptions fall back to local README text", (t) => {
     path.join(paths.rooms, "prompt-engineering", "README.md"),
     "# Prompt Engineering\n\nA practical room for designing reliable prompts and evaluating their results.",
   );
+  fs.writeFileSync(
+    path.join(paths.rooms, "prompt-engineering", "room.json"),
+    JSON.stringify({ version: "1.0", kind: "knowledge-room" }),
+  );
   const room = describeRoom(paths, "prompt-engineering");
   assert.equal(room.name, "Prompt Engineering");
   assert.match(room.description, /practical room/);
@@ -73,6 +82,10 @@ test("room entry stays inside the local catalog", (t) => {
   const paths = fixture(t);
   fs.mkdirSync(path.join(paths.rooms, "research"), { recursive: true });
   fs.writeFileSync(path.join(paths.rooms, "research", "README.md"), "Research");
+  fs.writeFileSync(
+    path.join(paths.rooms, "research", "room.json"),
+    JSON.stringify({ name: "Research", kind: "knowledge-room" }),
+  );
   const room = describeRoom(paths, "research");
   assert.match(roomEntryPrompt(room), /rooms\/research\//);
   assert.throws(() => roomDirectory(paths, "../secrets"), /invalid/);

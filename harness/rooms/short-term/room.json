@@ -1,0 +1,6 @@
+{
+  "name": "Short-Term Memory",
+  "description": "A lightweight scratchpad for information the operator wants held until it is used or cleared.",
+  "version": "1.0",
+  "kind": "knowledge-room"
+}

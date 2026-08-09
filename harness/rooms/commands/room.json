@@ -1,0 +1,6 @@
+{
+  "name": "Commands",
+  "description": "Central command reference that routes requests into the relevant room and protocol.",
+  "version": "1.0",
+  "kind": "knowledge-room"
+}
