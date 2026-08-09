@@ -14,6 +14,9 @@ test("buyer interface exposes stop, voice recovery, and health repair controls",
   const client = source("ui/public/app.js");
   const server = source("ui/server.js");
 
+  assert.match(html, /resonant-agent-logo\.png/);
+  assert.match(html, /class="genie-presence"/);
+  assert.doesNotMatch(html, /class="eye"/);
   assert.match(html, /id="stopGeneration"/);
   assert.match(html, /id="roomsView"/);
   assert.match(html, /id="roomCatalog"/);
