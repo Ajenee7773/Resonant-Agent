@@ -30,6 +30,7 @@ foundation source is checked and
 
 ## World Story
 
+- [ ] `rooms/world-story/ORIENTATION.md`
 - [ ] `rooms/world-story/README.md`
 - [ ] `rooms/world-story/agent-zero-reports/001_consolidated-report.md`
 - [ ] `rooms/world-story/ideals/001_framed-liberator.md`
