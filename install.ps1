@@ -229,6 +229,14 @@ call "$PiAppDir\start.bat" %*
 "@
 $batLauncher | Set-Content -Path (Join-Path $PiBinDir "resonant.bat") -Encoding ASCII
 
+$ResidentAgentsRoot = Join-Path $env:USERPROFILE "AlignedAI\ResidentAgents"
+Copy-DirContents "$ScriptDir\resident-agents" $ResidentAgentsRoot
+& (Join-Path $ResidentAgentsRoot "register-resident-agent.ps1") `
+  -Name "Resonant Agent" `
+  -WindowsLauncher (Join-Path $PiBinDir "resonant.bat") `
+  -Root $ResidentAgentsRoot `
+  -InstallDesktopStarter
+
 $psHeartbeatLauncher = @"
 `$env:RESONANT_HOME = "$PiHome"
 `$env:PI_HOME = "$PiHome"
@@ -288,6 +296,7 @@ Write-Step "  2. Start RESONANT Agent with: $PiAppDir\start.ps1"
 Write-Step "  3. Optional launcher: $PiBinDir\resonant.ps1"
 Write-Step "  4. Optional heartbeats: $PiAppDir\heartbeat-start.ps1"
 Write-Step "  5. Edit $PiAgentDir\AGENTS.md to customize the resonant identity."
+Write-Step "  6. Start every resident agent: $ResidentAgentsRoot\Start Resident Agents.bat"
 if ($env:RESONANT_SKIP_CONFIG_PROMPT -ne "1" -and (Test-Path -LiteralPath "$PiAppDir\configure.ps1")) {
   $answer = Read-Host "Run configuration now? [Y/n]"
   if (-not $answer -or $answer.ToLower() -ne "n") {

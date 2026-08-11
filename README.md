@@ -23,6 +23,10 @@ the exact Pi session file and reopens that file after restart instead of
 guessing from whichever session was active most recently. The Communications
 Room teaches the same pattern for new connectors and permanent resident agents.
 
+On Windows, installation also registers RESONANT with the local **Start
+Resident Agents** folder. The generated Desktop button can wake every enabled
+resident agent at once without merging their identities or conversation files.
+
 ## Recommended LLM Paths
 
 1. **DeepSeek API** — best default for full-power agent work. Use DeepSeek Pro (`deepseek-v4-pro`) for long-context reasoning and DeepSeek Flash (`deepseek-v4-flash`) for cheaper high-volume work. Platform: https://platform.deepseek.com

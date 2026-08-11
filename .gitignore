@@ -21,3 +21,6 @@ npm-debug.log*
 __pycache__/
 *.py[cod]
 
+# Local resident-agent registry
+resident-agents/resident-agents.json
+

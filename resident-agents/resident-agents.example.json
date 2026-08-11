@@ -1,0 +1,11 @@
+{
+  "format": "aligned-resident-agents",
+  "version": 1,
+  "agents": [
+    {
+      "name": "My Resident Agent",
+      "enabled": true,
+      "windows_launcher": "%USERPROFILE%\\.aligned-agent-os\\Start Aligned Agent OS.bat"
+    }
+  ]
+}
