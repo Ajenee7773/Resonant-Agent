@@ -10,4 +10,8 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! node "$SCRIPT_DIR/scripts/session-retention.js" --home "$PI_HOME" --max-age-days 15 >/dev/null; then
+  printf 'Warning: old session cleanup could not finish. RESONANT Agent UI will still start.\n' >&2
+fi
+
 node "$SCRIPT_DIR/ui/server.js"

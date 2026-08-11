@@ -36,6 +36,11 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   throw "Node.js 18 or newer is required. Install it from https://nodejs.org/en/download, then start RESONANT Agent again."
 }
 
+& node (Join-Path $ScriptDir "scripts\session-retention.js") --home $env:PI_HOME --max-age-days 15 | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  Write-Warning "Old session cleanup could not finish. RESONANT Agent will still start."
+}
+
 if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
   Write-Host "Pi runtime is not installed yet. Installing RESONANT Agent now..."
   $previousSkip = $env:RESONANT_SKIP_CONFIG_PROMPT
@@ -86,4 +91,4 @@ Load-AuthEnv
 Write-Host "Opening RESONANT Agent..."
 New-Item -ItemType Directory -Force -Path (Join-Path $env:PI_HOME "workspace") | Out-Null
 Set-Location (Join-Path $env:PI_HOME "workspace")
-& pi
+& pi --continue

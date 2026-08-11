@@ -13,6 +13,12 @@ set "PI_CODING_AGENT_DIR=%PI_HOME%\agent"
 
 echo RESONANT Agent start
 
+where node >nul 2>nul
+if not errorlevel 1 (
+  node "%SCRIPT_DIR%scripts\session-retention.js" --home "%PI_HOME%" --max-age-days 15 >nul 2>nul
+  if errorlevel 1 echo Warning: old session cleanup could not finish. RESONANT Agent will still start.
+)
+
 where pi >nul 2>nul
 if errorlevel 1 (
   echo Pi runtime is not installed yet. Installing RESONANT Agent now...
@@ -47,7 +53,7 @@ echo Opening RESONANT Agent...
 call :LoadAuthEnv
 if not exist "%PI_HOME%\workspace" mkdir "%PI_HOME%\workspace"
 pushd "%PI_HOME%\workspace"
-call pi
+call pi --continue
 set "PI_EXIT=%ERRORLEVEL%"
 popd
 exit /b %PI_EXIT%

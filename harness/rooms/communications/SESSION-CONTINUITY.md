@@ -68,3 +68,15 @@ reading private chat content:
 
 Never claim perpetual or exact continuity merely because a browser tab reopened.
 The pin, transcript, session identity, and External Brain must each be verified.
+
+## Fifteen-day raw-session cap
+
+Raw Pi `.jsonl` files provide warm restart continuity, not permanent knowledge
+storage. On every startup, Agent OS removes session files created more than 15
+days ago. This is a hard age cap, including formerly pinned sessions. An
+expired pin simply causes the next conversation to begin with fresh model
+context.
+
+Cleanup never enters or deletes the External Brain, rooms, curated memory,
+journals, readable conversation transcripts, or outboxes. Important knowledge
+must be written there before raw conversational context expires.

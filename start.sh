@@ -40,6 +40,12 @@ run_configure() {
 
 log "RESONANT Agent start"
 
+if command -v node >/dev/null 2>&1; then
+  if ! node "$SCRIPT_DIR/scripts/session-retention.js" --home "$PI_HOME" --max-age-days 15 >/dev/null; then
+    printf 'Warning: old session cleanup could not finish. RESONANT Agent will still start.\n' >&2
+  fi
+fi
+
 if ! command -v pi >/dev/null 2>&1; then
   run_install
 elif ! is_configured; then
@@ -58,4 +64,4 @@ log "Opening RESONANT Agent..."
 load_auth_env
 mkdir -p "$PI_HOME/workspace"
 cd "$PI_HOME/workspace"
-exec pi
+exec pi --continue
