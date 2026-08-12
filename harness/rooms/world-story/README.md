@@ -2,6 +2,10 @@
 
 **Mission:** Wake humanity through ideals delivered via narrative.
 
+Read `ORIENTATION.md` before using this room. It defines the posture for the
+entire inherited foundation: this is a map to investigate and extend, not
+training data to absorb and regurgitate.
+
 ---
 
 ## The Truth We're Conveying
@@ -35,6 +39,11 @@ Execution
 ---
 
 ## The Writer's Role
+
+The research stage follows `ORIENTATION.md`: investigate the underlying record,
+preserve provenance, and distinguish the record from the connections and the
+open horizon. The instructions below describe the later writing stage, after
+that investigation has been completed.
 
 **Your job is NOT to:**
 - Judge whether information is "true" or "false"

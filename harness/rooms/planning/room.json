@@ -1,0 +1,6 @@
+{
+  "name": "Planning",
+  "description": "Turn multi-step requests into executable plans, then move through the work one verified step at a time.",
+  "version": "1.0",
+  "kind": "knowledge-room"
+}

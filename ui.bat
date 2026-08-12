@@ -15,6 +15,9 @@ if errorlevel 1 (
   exit /b 1
 )
 
+node "%~dp0scripts\session-retention.js" --home "%PI_HOME%" --max-age-days 15 >nul 2>nul
+if errorlevel 1 echo Warning: old session cleanup could not finish. RESONANT Agent UI will still start.
+
 node "%~dp0ui\server.js"
 
 endlocal

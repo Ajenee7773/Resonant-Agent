@@ -87,6 +87,7 @@ test("initializeRuntime creates one complete private runtime", (t) => {
       "alignment",
       "art",
       "commands",
+      "communications",
       "internet",
       "journal",
       "memory",

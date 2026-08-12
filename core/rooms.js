@@ -39,14 +39,19 @@ function readJson(file) {
   }
 }
 
-function readRoomMetadata(directory) {
+function roomMetadataFile(directory) {
   for (const filename of ["room.json", "manifest.json"]) {
     const file = path.join(directory, filename);
     if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-      return readJson(file);
+      return file;
     }
   }
-  return {};
+  return null;
+}
+
+function readRoomMetadata(directory) {
+  const file = roomMetadataFile(directory);
+  return file ? readJson(file) : {};
 }
 
 function readRoomIntroduction(directory) {
@@ -102,7 +107,8 @@ function roomDirectory(paths, id) {
   if (
     !fs.existsSync(directory) ||
     !fs.statSync(directory).isDirectory() ||
-    SYSTEM_ROOM_NAMES.has(normalized.toLowerCase())
+    SYSTEM_ROOM_NAMES.has(normalized.toLowerCase()) ||
+    !roomMetadataFile(directory)
   ) {
     throw new Error("Knowledge Room was not found.");
   }
@@ -139,7 +145,8 @@ function listKnowledgeRooms(paths) {
       (entry) =>
         entry.isDirectory() &&
         !entry.isSymbolicLink() &&
-        !SYSTEM_ROOM_NAMES.has(entry.name.toLowerCase()),
+        !SYSTEM_ROOM_NAMES.has(entry.name.toLowerCase()) &&
+        roomMetadataFile(path.join(paths.rooms, entry.name)),
     )
     .map((entry) => describeRoom(paths, entry.name))
     .filter((room) => room.file_count > 0)

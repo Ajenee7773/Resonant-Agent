@@ -9,7 +9,13 @@ const runtimeHome = fs.mkdtempSync(
 );
 process.env.RESONANT_HOME = runtimeHome;
 
-const { PiRpcSession, buildSessionArgs } = require("../bridge/pi-rpc");
+const {
+  PiRpcSession,
+  buildSessionArgs,
+  readSessionPin,
+  sessionPinFile,
+  writeSessionPin,
+} = require("../bridge/pi-rpc");
 const { readJson, writeJson } = require("../core/json-store");
 const { initializeRuntime } = require("../core/runtime");
 const {
@@ -285,7 +291,7 @@ test("Pi RPC stop rejects active generation without waiting for timeout", async 
   assert.equal(session.current, null);
 });
 
-test("Pi RPC sessions resume their most recent local history by default", () => {
+test("Pi RPC sessions resume recent local history until an exact session is pinned", () => {
   assert.deepEqual(
     buildSessionArgs({
       sessionDir: "C:\\private\\session",
@@ -311,6 +317,86 @@ test("Pi RPC sessions resume their most recent local history by default", () => 
     }).includes("--continue"),
     false,
   );
+});
+
+test("Pi RPC pins and reopens the exact session without reading its chat", (t) => {
+  const sessionDir = fs.mkdtempSync(path.join(os.tmpdir(), "aligned-session-pin-"));
+  const sessionFile = path.join(sessionDir, "2026-08-08_exact-session.jsonl");
+  fs.writeFileSync(sessionFile, '{"type":"session","id":"exact-session"}\n');
+  t.after(() => fs.rmSync(sessionDir, { recursive: true, force: true }));
+
+  assert.equal(writeSessionPin(sessionDir, sessionFile), true);
+  assert.equal(readSessionPin(sessionDir), sessionFile);
+  assert.equal(writeSessionPin(sessionDir, sessionFile), true);
+  assert.equal(readSessionPin(sessionDir), sessionFile);
+  assert.equal(
+    JSON.parse(fs.readFileSync(sessionPinFile(sessionDir), "utf8")).session_file,
+    path.basename(sessionFile),
+  );
+  const restoredDir = fs.mkdtempSync(path.join(os.tmpdir(), "aligned-session-restore-"));
+  fs.copyFileSync(sessionFile, path.join(restoredDir, path.basename(sessionFile)));
+  fs.copyFileSync(sessionPinFile(sessionDir), sessionPinFile(restoredDir));
+  t.after(() => fs.rmSync(restoredDir, { recursive: true, force: true }));
+  assert.equal(
+    readSessionPin(restoredDir),
+    path.join(restoredDir, path.basename(sessionFile)),
+  );
+  assert.equal(sessionPinFile(sessionDir), path.join(sessionDir, "active-session.json"));
+  assert.deepEqual(
+    buildSessionArgs({
+      sessionDir,
+      sessionFile: readSessionPin(sessionDir),
+      provider: "ollama",
+      model: "gemma",
+    }),
+    [
+      "--mode",
+      "rpc",
+      "--session-dir",
+      sessionDir,
+      "--session",
+      sessionFile,
+      "--provider",
+      "ollama",
+      "--model",
+      "gemma",
+    ],
+  );
+
+  const outside = path.join(path.dirname(sessionDir), "outside-session.jsonl");
+  fs.writeFileSync(outside, "");
+  t.after(() => fs.rmSync(outside, { force: true }));
+  assert.equal(writeSessionPin(sessionDir, outside), false);
+  fs.writeFileSync(
+    sessionPinFile(sessionDir),
+    `${JSON.stringify({
+      format: "aligned-pi-session-pin",
+      version: 1,
+      session_file: outside,
+    })}\n`,
+  );
+  assert.equal(readSessionPin(sessionDir), "");
+});
+
+test("Pi RPC writes the exact pin before an agent response resolves", async (t) => {
+  const sessionDir = fs.mkdtempSync(path.join(os.tmpdir(), "aligned-session-end-"));
+  const sessionFile = path.join(sessionDir, "2026-08-08_completed-session.jsonl");
+  fs.writeFileSync(sessionFile, '{"type":"session","id":"completed-session"}\n');
+  t.after(() => fs.rmSync(sessionDir, { recursive: true, force: true }));
+
+  const session = new PiRpcSession({ sessionDir });
+  session.requestSessionPin = () => false;
+  const answer = new Promise((resolve, reject) => {
+    session.current = {
+      text: "CONTINUITY_OK",
+      resolve,
+      reject,
+    };
+    session.handleLine(JSON.stringify({ type: "agent_end", messages: [] }));
+  });
+
+  assert.equal(await answer, "CONTINUITY_OK");
+  assert.equal(readSessionPin(sessionDir), sessionFile);
 });
 
 test("successful heartbeat writes a durable model receipt", async () => {

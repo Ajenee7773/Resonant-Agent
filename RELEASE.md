@@ -21,6 +21,9 @@ Use this before pushing a public release.
 - Verify text-to-speech on at least one macOS machine and one Windows machine.
 - Verify Telegram setup with a throwaway bot token.
 - Verify Telegram bridge can be stopped with Ctrl+C.
+- Verify a web conversation writes `active-session.json`, restarts with the
+  exact same Pi session ID, and retains its readable transcript and External
+  Brain without storing credentials in the pin.
 
 ## Do Not Release If
 
